@@ -44,7 +44,7 @@ while getopts ":hus" opt; do
 		;;
 		# Case of the user
 		u )
-			user=$(who | cut -d ' ' -f 1);
+			user=$(who | cut -d ' ' -f 1 | head -n 1);
 			echo -e "---> The current connected user is \e[36m$user\e[0m\n";
 		;;
 		# Case of the system info
