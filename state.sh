@@ -49,18 +49,27 @@ while getopts ":hus" opt; do
 		;;
 		# Case of the system info
 		s )
+			# Get processor type
 			proc_type=$(uname -p);
+			# Get the OS
 			os=$(uname -o);
+			# Get the machine name
 			machine_name=$(uname -n);
+			# Get the date of the last update of the kernel
 			kernel_date=$(uname -v | cut -d ' ' -f 5,4,8);
+			# Get the kernel version
 			kernel_version=$(uname -v | cut -d ' ' -f 1 | cut -d '-' -f 1 | cut -d '~' -f 2 | cut -d '.' -f 1,2);
 			echo -e "---> Recap of \e[36m$machine_name\e[0m : ";
 			echo -en "\tType of processor : "
+			# If the computer is a 64-bit proc
 			if [ $proc_type = "x86_64" ]; then
 				echo -en "\e[36m64-bit\e[0m";
+			# If the computer is a 32-bit proc
 			elif [ $proc_type = "x86" ]; then
 				echo -en "\e[36m32-bit \e[31m(time to change, 2038 is coming...)\e[0m";
 			else
+				# Log an entry to syslog
+				logger -t SystemChecker "The processor type wasn't recognized (using uname)";
 				echo -en "\e[31mUNKNOWN\e[0m";
 			fi
 			echo -e ".";
