@@ -1,0 +1,33 @@
+.TH Daemon 1 "14 October 2019" "version 1.0"
+.SH NAME
+Daemon. A tool to automate wallpaper switching
+.SH SYNOPSIS
+Usage : ./daemon.sh [-h] [-i] [-r]
+.PP
+.B -h
+\tPrint the help and quit the program
+.PP
+.B -i
+\tInstall the crontab job
+.PP
+.B -r
+\tRestore to a state before the change
+.SH EXAMPLES
+.B ./daemon.sh -h\t
+Print the help
+.PP
+.B ./daemon.sh -i\t
+Install the cron job and backs up the crontab in .crontab.bak
+.PP
+.B ./state.sh -r\t
+Restores the previous state of the crontab
+.SH SEE ALSO
+.B crontab
+.SH BUGS
+If the install is launched two times in a row, the .crontab.bak is overwritten (WIP)
+.PP
+.SH AUTHOR
+Pablo Bondia-Luttiau, Daël Mombo-Mombo
+.SH COPYRIGHT
+Copyright © 2019 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
