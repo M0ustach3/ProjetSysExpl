@@ -26,6 +26,13 @@ Restores the previous state of the crontab
 .SH BUGS
 If the install is launched two times in a row, the .crontab.bak is overwritten (WIP)
 .PP
+.B WARNING
+The script is meant to be run inside his folder. We had some issues if the script is executed on a top level folder. For example, typing
+.B ./Daemon/daemon.sh
+will create a file on the folder 
+.B Daemon.
+Therefore, the script will not be able to find the file inside his own folder. This is basically a bug caused by a relative path inside the program. E.g : 
+.B pwd
 .SH AUTHOR
 Pablo Bondia-Luttiau, Daël Mombo-Mombo
 .SH COPYRIGHT
