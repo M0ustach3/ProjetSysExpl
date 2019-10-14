@@ -53,8 +53,11 @@ while getopts ":hir" opt; do
 		# Restoring case
 		r )
 			echo "Trying to restore your crontab...";
+			# If the file .crontab.bak exists
 			if [ -f "$script_path/.crontab.bak" ]; then
+				# If the file .crontab.bak is readable
 				if [ -r "$script_path/.crontab.bak" ]; then
+					# Update the crontab
 					crontab $script_path/.crontab.bak;
 					echo -e "\e[32mSuccessfully restored your crontab !\e[0m";
 					exit 0;
