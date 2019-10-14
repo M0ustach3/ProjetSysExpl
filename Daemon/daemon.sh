@@ -42,7 +42,7 @@ while getopts ":hir" opt; do
 			full_path="$script_path/wallpaperChanger.sh"
 			echo -e "\e[34m[INFO]\e[0m Modifying your crontab...";
 			# Add a new cron job inside the temporary cron job (with redirection to avoid any messages on the terminal)
-			echo "* * * * * bash $full_path > /dev/null 2>&1" >> /tmp/customCronJob;
+			echo "*/30 * * * * bash $full_path > /dev/null 2>&1" >> /tmp/customCronJob;
 			# Load the new cron job from tmp
 			crontab /tmp/customCronJob;
 			# Delete the temporary cron job
