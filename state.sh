@@ -82,8 +82,8 @@ while getopts ":husr" opt; do
 			all_data=$(free -m | sed -n '/ /s/ \+/ /gp' | tail -n 2 | cut -d ':' -f2 | tr '\n' ' ' );
 			used_ram=$(echo $all_data | cut -d ' ' -f2);
 			total_ram=$(echo $all_data | cut -d ' ' -f1);
-			percentage_used_ram=$( expr 100 '*' $used_ram '/' $total_ram)
-			echo "$percentage_used_ram% Ram";
+			percentage_used_ram=$( echo "scale=2; 100*($used_ram / $total_ram)" | bc)
+			echo -e "\tRam is used at $percentage_used_ram%";
 		;;
 		# Unknown option
 		\? )
