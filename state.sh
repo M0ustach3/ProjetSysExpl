@@ -51,19 +51,18 @@ while getopts ":husr" opt; do
 		# Case of the system info
 		s )
 			# Get processor type
-			proc_type=$(uname -p);
+			proc_type=$(hostnamectl | tail -n 1 | cut -d ':' -f2);
 			# Get the OS
-			os=$(uname -o);
+			os=$(hostnamectl | tail -n 3 | head -n 1 | cut -d ':' -f2);
 			# Get the machine name
 			machine_name=$(uname -n);
+			
 			# Get the date of the last update of the kernel
 			kernel_date=$(uname -v | cut -d ' ' -f 5,4,8);
-			# Get the kernel version
-			kernel_version=$(uname -v | cut -d ' ' -f 1 | cut -d '-' -f 1 | cut -d '~' -f 2 | cut -d '.' -f 1,2);
 			echo -e "---> Recap of \e[36m$machine_name\e[0m : ";
 			echo -en "\tType of processor : "
 			# If the computer is a 64-bit proc
-			if [ $proc_type = "x86_64" ]; then
+			if [ $proc_type = "x86-64" ]; then
 				echo -en "\e[36m64-bit\e[0m";
 			# If the computer is a 32-bit proc
 			elif [ $proc_type = "x86" ]; then
@@ -75,7 +74,6 @@ while getopts ":husr" opt; do
 			fi
 			echo -e ".";
 			echo -e "\tOperating System : \e[36m$os\e[0m.";
-			echo -e "\tCurrent kernel version : \e[36m$kernel_version\e[0m.";
 			echo -e "\tDate of current kernel version : \e[36m$kernel_date\e[0m.";
 			echo "";
 		;;
