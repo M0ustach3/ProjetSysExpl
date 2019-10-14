@@ -18,11 +18,13 @@ banner
 
 # Custom help function
 help(){
-	echo -e "Welcome to \e[32msystem checker\e[0m ! ";
-	echo -e "\tThis is the help of the possible commands : ";
+	echo -e "Welcome to \e[32mSystemChecker\e[0m ! ";
+	echo -e "\tThis is the help of the possible options : ";
 	echo -e "\t-h\tPrint this help and exit";
 	echo -e "\t-u\tPrint the current logged in user";
 	echo -e "\t-s\tPrint the system information";
+	echo -e "\t-r\tPrint the resources usage";
+	echo -e "\t-b\tPrint if critical boot errors were found";
 	echo -e "The log tags of this program can be found with tag \"SystemChecker\" under /var/log/syslog or with journalctl"
 	echo -e "";
 }
@@ -37,7 +39,7 @@ usage(){
 
 
 # Handling options
-while getopts ":husr" opt; do
+while getopts ":husrb" opt; do
 	case ${opt} in
 		# Help case
 		h )
@@ -79,11 +81,66 @@ while getopts ":husr" opt; do
 		;;
 		# Case of the resources
 		r )
+			# Get all the numbers from free, with formatted output
 			all_data=$(free -m | sed -n '/ /s/ \+/ /gp' | tail -n 2 | cut -d ':' -f2 | tr '\n' ' ' );
 			used_ram=$(echo $all_data | cut -d ' ' -f2);
 			total_ram=$(echo $all_data | cut -d ' ' -f1);
-			percentage_used_ram=$( echo "scale=2; 100*($used_ram / $total_ram)" | bc)
-			echo -e "\tRam is used at $percentage_used_ram%";
+			used_swap=$(echo $all_data | cut -d ' ' -f8);
+			total_swap=$(echo $all_data | cut -d ' ' -f7);
+			# Get the real percentage of RAM used
+			percentage_used_ram=$( echo "scale=2; 100*($used_ram / $total_ram)" | bc);
+			# Get the integer corresponding to it (to test later on)
+			integer_used_ram=$(( $((100 * $used_ram)) / $total_ram ));
+			# Get the real percentage of swap used
+			percentage_used_swap=$( echo "scale=2; 100*($used_swap / $total_swap)" | bc);
+			# Get the integer corresponding to it (to test later on)
+			integer_used_swap=$(( $((100 * $used_ram)) / $total_ram ));
+			echo -e "---> Resources used";
+
+			######################## RAM ###################### 
+
+			# Green output (RAM percentage between 0 and 50)
+			if [ $integer_used_ram -ge 0 -a $integer_used_ram -lt 50 ]; then
+				echo -e "\t\e[32mRAM is used at $percentage_used_ram%\e[0m";
+			# Yellow output (RAM percentage between 50 and 80)
+			elif [ $integer_used_ram -ge 50 -a $integer_used_ram -lt 80 ]; then
+				echo -e "\t\e[33mRAM is used at $percentage_used_ram%\e[0m";
+			# Red output  (RAM percentage between 80 and 100)
+			elif [ $integer_used_ram -ge 80 -a $integer_used_ram -le 100 ]; then
+				echo -e "\t\e[31mRAM is used at $percentage_used_ram%\e[0m";
+			# Default case output
+			else
+				echo -e "\t\e[31mFree RAM cannot be determined...\e[0m";
+				logger -t SystemChecker "Free and Total RAM couldn't be determined correctly (using free). Got result $integer_used_ram";
+			fi
+
+			######################## Swap ###################### 
+
+			# Green output (Swap percentage between 0 and 50)
+			if [ $integer_used_swap -ge 0 -a $integer_used_swap -lt 50 ]; then
+				echo -e "\t\e[32mSwap is used at $percentage_used_swap%\e[0m";
+			# Yellow output (Swap percentage between 50 and 80)
+			elif [ $integer_used_swap -ge 50 -a $integer_used_swap -lt 80 ]; then
+				echo -e "\t\e[33mSwap is used at $percentage_used_swap%\e[0m";
+			# Red output (Swap percentage between 80 and 100)
+			elif [ $integer_used_swap -ge 80 -a $integer_used_swap -le 100 ]; then
+				echo -e "\t\e[31mSwap is used at $percentage_used_swap%\e[0m";
+			# Default case output
+			else
+				echo -e "\t\e[31mFree Swap cannot be determined...\e[0m";
+				logger -t SystemChecker "Free and Total Swap couldn't be determined correctly (using free). Got result $integer_used_swap";
+			fi
+			echo "";
+		;;
+		b )
+			echo -e "---> Boot errors";
+			# This counts the number of lines starting and ending with -- No entries --.
+			number_of_entries=$(journalctl -xb -p crit | grep -E "^\-\- No entries \-\-$" | wc -l);
+			if [ $number_of_entries -eq 1 ]; then
+				echo -e "\t\e[32mNo boot errors were found ! :)\e[0m";
+			else
+				echo -e "\t\e[31mBoot errors were found, please check your boot logs\e[0m";
+			fi
 		;;
 		# Unknown option
 		\? )
