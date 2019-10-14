@@ -7,3 +7,8 @@ This is the structure of the project :
 	- README.md : corresponding README
 	- state.man : man page
 	- state.sh  : script
+- Deamon : Exercise 4, change wallpaper every 30 minutes
+	- README.md : corresponding README
+	- daemon.man : man page
+	- daemon.sh : script
+	- wallpaperChanger.sh : cron script
