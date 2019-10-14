@@ -5,3 +5,4 @@ This exercise is meant to be a _daemon_ to change the wallpaper every 30 minutes
 
 - Files in this directory : 
 	- daemon.sh  : The program. You can execute it by typing ``./daemon.sh``
+	- daemon.man : The man page of this program. You can view it by typing ``man ./daemon.man``
