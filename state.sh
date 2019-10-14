@@ -23,6 +23,7 @@ help(){
 	echo -e "\t-h\tPrint this help and exit";
 	echo -e "\t-u\tPrint the current logged in user";
 	echo -e "\t-s\tPrint the system information";
+	echo -e "The log tags of this program can be found with tag \"SystemChecker\" under /var/log/syslog or with journalctl"
 	echo -e "";
 }
 
@@ -36,7 +37,7 @@ usage(){
 
 
 # Handling options
-while getopts ":hus" opt; do
+while getopts ":husr" opt; do
 	case ${opt} in
 		# Help case
 		h )
@@ -77,6 +78,14 @@ while getopts ":hus" opt; do
 			echo -e "\tCurrent kernel version : \e[36m$kernel_version\e[0m.";
 			echo -e "\tDate of current kernel version : \e[36m$kernel_date\e[0m.";
 			echo "";
+		;;
+		# Case of the resources
+		r )
+			all_data=$(free -m | sed -n '/ /s/ \+/ /gp' | tail -n 2 | cut -d ':' -f2 | tr '\n' ' ' );
+			used_ram=$(echo $all_data | cut -d ' ' -f2);
+			total_ram=$(echo $all_data | cut -d ' ' -f1);
+			percentage_used_ram=$( expr 100 '*' $used_ram '/' $total_ram)
+			echo "$percentage_used_ram% Ram";
 		;;
 		# Unknown option
 		\? )
