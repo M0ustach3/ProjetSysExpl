@@ -19,7 +19,7 @@ Print the help
 .B ./daemon.sh -i\t
 Install the cron job and backs up the crontab in .crontab.bak
 .PP
-.B ./state.sh -r\t
+.B ./daemon.sh -r\t
 Restores the previous state of the crontab
 .SH SEE ALSO
 .B crontab
