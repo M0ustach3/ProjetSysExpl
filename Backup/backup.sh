@@ -69,13 +69,20 @@ backup(){
 
 
 	############ Backup work
-
 	if [[ "$choice" = "1" ]]; then
 		# Container -> Partition
-		rsync -rav /media/backupContainer/* /media/backupPartition;
+		if [[ ! -z "$3" ]]; then
+			tar --create -z -P --file=/media/backupPartition/archive.`date --rfc-3339=date`.tar /media/backupContainer;
+		else
+			rsync -rav /media/backupContainer/* /media/backupPartition;
+		fi
 	else
 		# Partition -> Container
-		rsync -rav /media/backupPartition/* /media/backupContainer;
+		if [[ ! -z "$3" ]]; then
+			tar --create -z -P --file=/media/backupContainer/archive.`date --rfc-3339=date`.tar /media/backupPartition;
+		else
+			rsync -rav /media/backupPartition/* /media/backupContainer;
+		fi
 	fi
 
 	############ Backup end
@@ -96,7 +103,7 @@ backup(){
 
 ################## Main menu
 	# Handling options
-	while getopts ":hc:p:f:t:" opt; do
+	while getopts ":hc:p:f:t:s" opt; do
 		case ${opt} in
 			# Help case
 			h )
@@ -118,6 +125,10 @@ backup(){
 			# To parameter
 			t )
 				TO=$OPTARG;
+			;;
+			# Compress parameter
+			s )
+				COMPRESS="true";
 			;;
 			# Unknown option
 			\? )
