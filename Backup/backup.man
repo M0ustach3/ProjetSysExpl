@@ -2,15 +2,53 @@
 .SH NAME
 Backup. Backup files between Veracrypt container and encrypted partition.
 .SH SYNOPSIS
-Usage : ./backup.sh [-h]
+Usage : ./backup.sh [-h] -c CONTAINERFILE -p PARTITIONFILE -f (container|partition) -t (partition|container)
 .PP
 .B -h
-\tPrint the help and quit the program
+Print the help and quit the program.
+.PP
+.B -c CONTAINERFILE
+Takes the
+.B CONTAINERFILE
+as the Veracrypt container file. This option is
+.B mandatory.
+.PP
+.B -p PARTITIONFILE
+Takes the
+.B PARTITIONFILE
+as the partition path. This option is
+.B mandatory.
+.PP
+.B -f (container|partition)
+Declare the source (FROM) of the backup as either the Veracrypt container or the partition.
+This option is
+.B mandatory.
+.PP
+.B -t (partition|container)
+Declare the destination (TO) of the backup as either the Veracrypt container or the partition.
+This option is
+.B mandatory.
+.PP
+.SH EXAMPLES
+.B ./backup.sh -h\t
+Print the help
+.PP
+.B ./backup.sh -c /home/jp/container -p /dev/sda9 -f container -t partition\t
+Copy the contents of the Veracrypt container located in /home/jp/container into the encrypted /dev/sda9 partition.
+.PP
+.B ./backup.sh -p /dev/sdb5 -c /media/container -f partition -t container\t
+Copy the contents of the partition /dev/sdb5 and put it inside the Veracrypt container located in /media/container
+.PP
+
 .SH SEE ALSO
 .B cryptsetup
 .PP
+.B veracrypt
+.PP
+.B rsync
+.PP
 .SH BUGS
-None yet
+None. (yet...)
 .SH AUTHOR
 Pablo Bondia-Luttiau, Daël Mombo-Mombo
 .SH COPYRIGHT
