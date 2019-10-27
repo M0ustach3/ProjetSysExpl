@@ -1,7 +1,0 @@
-[Unit]
-Description=Service to change wallpaper
-
-[Service]
-Type=simple
-
-ExecStart=/bin/bash /opt/wallpaperChanger.sh
