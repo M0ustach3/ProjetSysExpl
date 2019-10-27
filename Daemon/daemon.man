@@ -1,38 +1,18 @@
 .TH Daemon 1 "14 October 2019" "version 1.0"
 .SH NAME
-Daemon. A tool to automate wallpaper switching
+Daemon. A tool to automate wallpaper changing
 .SH SYNOPSIS
-Usage : ./daemon.sh [-h] [-i] [-r]
+Usage : ./install.sh
 .PP
-.B -h
-\tPrint the help and quit the program
-.PP
-.B -i
-\tInstall the crontab job
-.PP
-.B -r
-\tRestore to a state before the change
 .SH EXAMPLES
-.B ./daemon.sh -h\t
-Print the help
+.B ./install.sh
+Install the corresponding daemon and start it
 .PP
-.B ./daemon.sh -i\t
-Install the cron job and backs up the crontab in .crontab.bak
-.PP
-.B ./daemon.sh -r\t
-Restores the previous state of the crontab
 .SH SEE ALSO
-.B crontab
+.B systemctl
 .SH BUGS
-If the install is launched two times in a row, the .crontab.bak is overwritten (WIP)
+The daemon does not restart itself after reboot. This is a WIP
 .PP
-.B WARNING
-The script is meant to be run inside his folder. We had some issues if the script is executed on a top level folder. For example, typing
-.B ./Daemon/daemon.sh
-will create a file on the folder 
-.B Daemon.
-Therefore, the script will not be able to find the file inside his own folder. This is basically a bug caused by a relative path inside the program. E.g : 
-.B pwd
 .SH AUTHOR
 Pablo Bondia-Luttiau, Daël Mombo-Mombo
 .SH COPYRIGHT

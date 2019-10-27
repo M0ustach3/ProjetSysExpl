@@ -88,11 +88,12 @@ while getopts ":husrb" opt; do
 			used_swap=$(echo $all_data | cut -d ' ' -f8);
 			total_swap=$(echo $all_data | cut -d ' ' -f7);
 			# Get the real percentage of RAM used
-			percentage_used_ram=$( echo "scale=2; 100*($used_ram / $total_ram)" | bc);
+			#awk '{print $used_ram/$total_ram*100.0}';
+			percentage_used_ram=$( echo "scale=4; 100*($used_ram / $total_ram)" | bc);
 			# Get the integer corresponding to it (to test later on)
 			integer_used_ram=$(( $((100 * $used_ram)) / $total_ram ));
 			# Get the real percentage of swap used
-			percentage_used_swap=$( echo "scale=2; 100*($used_swap / $total_swap)" | bc);
+			percentage_used_swap=$( echo "scale=4; 100*($used_swap / $total_swap)" | bc);
 			# Get the integer corresponding to it (to test later on)
 			integer_used_swap=$(( $((100 * $used_ram)) / $total_ram ));
 			echo -e "---> Resources used";
