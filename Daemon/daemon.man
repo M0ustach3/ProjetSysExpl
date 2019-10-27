@@ -6,12 +6,12 @@ Usage : ./install.sh
 .PP
 .SH EXAMPLES
 .B ./install.sh
-Install the corresponding daemon and enable it right now
+Install the corresponding daemon and start it
 .PP
 .SH SEE ALSO
 .B systemctl
 .SH BUGS
-The daemon does not restart itself after reboot
+The daemon does not restart itself after reboot. This is a WIP
 .PP
 .SH AUTHOR
 Pablo Bondia-Luttiau, Daël Mombo-Mombo
