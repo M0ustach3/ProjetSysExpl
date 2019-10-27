@@ -13,15 +13,15 @@ ExecStart=/bin/bash /opt/wallpaperChanger.sh
 Restart=always
 
 [Install]
-WantedBy=multi-user.target" > ./daemonWallpaper.service;
+WantedBy=multi-user.target" > /tmp/daemonWallpaper.service;
 
 # Copy the script into /opt (the best place according to the FHS)
 sudo cp ./wallpaperChanger.sh /opt/;
 # Copy the service into the systemd folder
-sudo cp ./daemonWallpaper.service /etc/systemd/system/;
+sudo cp /tmp/daemonWallpaper.service /etc/systemd/system/;
 # Reload the daemons
 sudo systemctl daemon-reload;
 # Start the daemon
 sudo systemctl start daemonWallpaper;
-# Enable the daemon on boot
-sudo systemctl enable daemonWallpaper;
+# Delete the temp service file
+rm /tmp/daemonWallpaper.service;
