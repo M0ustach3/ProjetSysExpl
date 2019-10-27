@@ -26,7 +26,6 @@ help(){
 	echo -e "\t-h\tPrint this help and exit";
 	echo -e "";
 }
-
 # Custom usage function
 usage(){
 	echo -e "\tUsage : $0 [arguments]";
@@ -34,38 +33,77 @@ usage(){
 	echo -e "";
 }
 
-menu(){
-	echo -e "\t1. Container to encrypted partition";
-	echo -e "\t2. Encrypted partition to container";
-}
-
-
-
 backup(){
 	# $1 must be container, $2 must be partition
-	echo "Container path : $1";
-	echo "Partition path : $2";
-	echo "Compress ? $3";
+	if [[ ! -e "$1" ]]; then
+		echo "Container path does not exist.";
+		exit 1;
+	fi
+	if [[ ! -e "$2" ]]; then
+		echo "Partition does not exist.";
+		exit 1;
+	fi
+	echo "Compress : $3";
+	if [[ ! -d /media/backupPartition ]]; then
+		sudo mkdir /media/backupPartition;
+	else
+		echo "/media/backupPartition already exists, please delete this directory to continue."
+		exit 1;
+	fi
+	if [[ ! -d /media/backupContainer ]]; then
+		sudo mkdir /media/backupContainer;
+	else
+		echo "/media/backupContainer already exists, please delete this directory to continue."
+		exit 1;
+	fi
+	# Mounting the container
+	sudo veracrypt "$1" /media/backupContainer;
+	# Opening the Partition
+	sudo cryptsetup luksOpen "$2" encryptedPartition;
+	# Mounting the partition
+	sudo mount /dev/mapper/encryptedPartition /media/backupPartition;
+
+
+	############ Backup work
+
+	if [[ "$choice" = "1" ]]; then
+		# Container -> Partition
+		rsync -rav /media/backupContainer/* /media/backupPartition;
+	else
+		# Partition -> Container
+		rsync -rav /media/backupPartition/* /media/backupContainer;
+	fi
+
+	############ Backup end
+
+	# Unmounting the container
+	sudo veracrypt -d "$1";
+	# Unmount the partition
+	sudo umount /media/backupPartition;
+	# Close the partition
+	sudo cryptsetup luksClose encryptedPartition;
+
+	# Remove the useless directories
+	sudo rmdir /media/backupContainer;
+	sudo rmdir /media/backupPartition;
 }
 
 
 
 ################## Main menu
-unset CHOICE
-
-menu
-read -p 'Choice (1 or 2) : ' choice;
-if [[ "$choice" = "1" || "$choice" = "2" ]]; then
 	# Handling options
-	while getopts ":hacf:t:" opt; do
+	while getopts ":hc:p:f:t:" opt; do
 		case ${opt} in
 			# Help case
 			h )
 				help;
 				exit 0;
 			;;
-			c )
-				COMPRESS=true;
+			c)
+				CONTAINER=$OPTARG;
+			;;
+			p )
+				PARTITION=$OPTARG;
 			;;
 			f )
 				FROM=$OPTARG;
@@ -86,16 +124,17 @@ if [[ "$choice" = "1" || "$choice" = "2" ]]; then
 			;;
 		esac
 	done
-	shift $((OPTIND -1))
+shift $((OPTIND -1))
 
-	if [[ "$choice" = "1" ]]; then
-		backup $FROM $TO $COMPRESS;
+if [[ ("$FROM" == "container" && "$TO" == "partition") || ("$FROM" == "partition" && "$TO" == "container") ]]; then
+	if [[ "$FROM" == "container" && "$TO" == "partition" ]]; then
+		choice="1";
 	else
-		backup $TO $FROM $COMPRESS;
+		choice="2";
 	fi
-
-	exit 0;
+	backup $CONTAINER $PARTITION $COMPRESS;
 else
-	echo -e "\n\e[31mPlease select either 1 or 2.\e[0m";
+	echo "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help.";
 	exit 1;
 fi
+exit 0;
