@@ -6,7 +6,7 @@ This is the structure of the project :
 	- README.md : corresponding README
 	- backup.sh : script
 	- backup.man : man page
-- ComputerState : Exercise 2, display the state of the computer
+- SystemChecker : Exercise 2, display the state of the computer
 	- README.md : corresponding README
 	- state.man : man page
 	- state.sh  : script
