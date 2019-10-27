@@ -1,0 +1,60 @@
+.TH Backup 1 "27 October 2019" "version 1.0"
+.SH NAME
+Backup. Backup files between Veracrypt container and encrypted partition.
+.SH SYNOPSIS
+Usage : ./backup.sh [-h] -c CONTAINERFILE -p PARTITIONFILE -f (container|partition) -t (partition|container) [-s]
+.PP
+.B -h
+Print the help and quit the program.
+.PP
+.B -c CONTAINERFILE
+Takes the
+.B CONTAINERFILE
+as the Veracrypt container file. This option is
+.B mandatory.
+.PP
+.B -p PARTITIONFILE
+Takes the
+.B PARTITIONFILE
+as the partition path. This option is
+.B mandatory.
+.PP
+.B -f (container|partition)
+Declare the source (FROM) of the backup as either the Veracrypt container or the partition.
+This option is
+.B mandatory.
+.PP
+.B -t (partition|container)
+Declare the destination (TO) of the backup as either the Veracrypt container or the partition.
+This option is
+.B mandatory.
+.PP
+.B -s
+Creates a tar.gz compressed archive instead of copying the directory
+.PP
+.SH EXAMPLES
+.B ./backup.sh -h\t
+Print the help
+.PP
+.B ./backup.sh -c /home/jp/container -p /dev/sda9 -f container -t partition\t
+Copy the contents of the Veracrypt container located in /home/jp/container into the encrypted /dev/sda9 partition.
+.PP
+.B ./backup.sh -p /dev/sdb5 -c /media/container -f partition -t container -s\t
+Creates a tar.gz archive of the partition /dev/sdb5 and put it inside the Veracrypt container located in /media/container
+.PP
+.SH SEE ALSO
+.B cryptsetup
+.PP
+.B veracrypt
+.PP
+.B rsync
+.PP
+.B tar
+.PP
+.SH BUGS
+None. (yet...)
+.SH AUTHOR
+Pablo Bondia-Luttiau, Daël Mombo-Mombo
+.SH COPYRIGHT
+Copyright © 2019 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
