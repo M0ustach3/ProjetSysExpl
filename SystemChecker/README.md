@@ -1,19 +1,21 @@
-# Daemon
+# SystemChecker
 
-daemon is a program meant to change the wallpaper every 30 mins.
+SystemChecker is a program meant to show a recap of the state of the system.
 
 ## Installation
 
 This program does not need to be installed. It can be run inside this folder. You can view the manual by typing
 
 ```bash
-man ./daemon.man
+man ./systemChecker.man
 ```
 
 ## Usage
 
 ```bash
-./install.sh # Installs the daemon
+./systemChecker.sh -h #Show the help and exit
+./systemChecker -u -r #Show the user and the resources
+./systemChecker -b -s #Show the critical boot errors and the system information
 ```
 
 ## Contributing

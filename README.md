@@ -8,8 +8,8 @@ This is the structure of the project :
 	- backup.man : man page
 - SystemChecker : Exercise 2, display the state of the computer
 	- README.md : corresponding README
-	- state.man : man page
-	- state.sh  : script
+	- systemChecker.man : man page
+	- systemChecker.sh  : script
 - Deamon : Exercise 4, change wallpaper every 30 minutes
 	- README.md : corresponding README
 	- daemon.man : man page
