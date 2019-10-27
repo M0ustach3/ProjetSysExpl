@@ -1,0 +1,18 @@
+.TH Backup 1 "27 October 2019" "version 1.0"
+.SH NAME
+Backup. Backup files between Veracrypt container and encrypted partition.
+.SH SYNOPSIS
+Usage : ./backup.sh [-h]
+.PP
+.B -h
+\tPrint the help and quit the program
+.SH SEE ALSO
+.B cryptsetup
+.PP
+.SH BUGS
+None yet
+.SH AUTHOR
+Pablo Bondia-Luttiau, Daël Mombo-Mombo
+.SH COPYRIGHT
+Copyright © 2019 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
