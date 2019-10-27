@@ -24,6 +24,10 @@ help(){
 	echo -e "Welcome to \e[32mBackup\e[0m ! ";
 	echo -e "\tThis is the help of the possible options : ";
 	echo -e "\t-h\tPrint this help and exit";
+	echo -e "\t-c [FILE]\tThe container path *MANDATORY*";
+	echo -e "\t-p [FILE]\tThe partition path *MANDATORY*";
+	echo -e "\t-f\tFROM, this can take either 'container' or 'partition' values";
+	echo -e "\t-t\tTO, this can take either 'container' or 'partition' values";
 	echo -e "";
 }
 # Custom usage function
