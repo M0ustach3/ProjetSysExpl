@@ -7,7 +7,7 @@ Backup is a program meant to create backups between Veracrypt container and encr
 This program does not need to be installed. It can be run inside this folder. You can view the manual by typing
 
 ```bash
-man ./backup.sh
+man ./backup.man
 ```
 
 ## Usage
