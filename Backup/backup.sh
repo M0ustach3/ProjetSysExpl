@@ -38,27 +38,27 @@ usage(){
 }
 
 backup(){
-	# $1 must be container, $2 must be partition
+	# If the container path exists
 	if [[ ! -e "$1" ]]; then
 		echo "Container path does not exist.";
 		exit 1;
 	fi
+	# If the partition path exists
 	if [[ ! -e "$2" ]]; then
 		echo "Partition does not exist.";
 		exit 1;
 	fi
-	echo "Compress : $3";
+	# If the directory for the partition doesn't exist, create it
 	if [[ ! -d /media/backupPartition ]]; then
 		sudo mkdir /media/backupPartition;
 	else
-		echo "/media/backupPartition already exists, please delete this directory to continue."
-		exit 1;
+		echo "/media/backupPartition already exists, skipping directory creation...";
 	fi
+	# If the directory for the container doesn't exist, create it
 	if [[ ! -d /media/backupContainer ]]; then
 		sudo mkdir /media/backupContainer;
 	else
-		echo "/media/backupContainer already exists, please delete this directory to continue."
-		exit 1;
+		echo "/media/backupContainer already exists, skipping directory creation...";
 	fi
 	# Mounting the container
 	sudo veracrypt "$1" /media/backupContainer;
@@ -103,15 +103,19 @@ backup(){
 				help;
 				exit 0;
 			;;
+			# Container parameter
 			c)
 				CONTAINER=$OPTARG;
 			;;
+			# Partition parameter
 			p )
 				PARTITION=$OPTARG;
 			;;
+			# From parameter
 			f )
 				FROM=$OPTARG;
 			;;
+			# To parameter
 			t )
 				TO=$OPTARG;
 			;;
@@ -130,12 +134,14 @@ backup(){
 	done
 shift $((OPTIND -1))
 
+# If the supplied options are either container -> partition OR partition -> container
 if [[ ("$FROM" == "container" && "$TO" == "partition") || ("$FROM" == "partition" && "$TO" == "container") ]]; then
 	if [[ "$FROM" == "container" && "$TO" == "partition" ]]; then
 		choice="1";
 	else
 		choice="2";
 	fi
+	# Start the backup
 	backup $CONTAINER $PARTITION $COMPRESS;
 else
 	echo "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help.";
