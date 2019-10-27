@@ -13,6 +13,6 @@ while true; do
 	# Change the actual wallpaper of the computer
 	xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set $random_wallpaper;
 	# Sleep for 30 minutes	
-	sleep 10;
+	sleep 30m;
 done
 exit 0
