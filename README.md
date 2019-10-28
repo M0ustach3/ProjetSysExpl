@@ -10,7 +10,13 @@ This is the structure of the project :
 	- README.md : corresponding README
 	- systemChecker.man : man page
 	- systemChecker.sh  : script
-- Deamon : Exercise 4, change wallpaper every 30 minutes
+- Config : Exercise 3, change profiles at startup
+	- README.md : corresponding README
+	- config.sh : script to switch between profiles
+	- install.sh : setup script
+	- configProfiles.desktop : desktop entry (to launch at startup)
+	- backgrounds/ : folder with the 3 backgrounds needed by the script
+- Daemon : Exercise 4, change wallpaper every 30 minutes
 	- README.md : corresponding README
 	- daemon.man : man page
 	- install.sh : setup script
