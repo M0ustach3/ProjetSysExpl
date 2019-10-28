@@ -1,9 +1,21 @@
 # Config
-### Made with <3 by Pablo Bondia-Luttiau and Daël Mombo-Mombo
---------
-This exercise is meant to be an _automatic config program_.
 
-- Files in this directory : 
-	- config.man : The man page of this program. You can view it by typing ``man ./config.man``
-	- config.sh  : The program. You can execute it and view the help by typing ``./config.sh -h``
+Config will prompt you at startup for a specific profile, to change and launch corresponding applications.
 
+## Installation
+
+You can install the startup script by typing :
+
+```bash
+./install.sh # Installs the components
+```
+
+After typing it, you'll be able to choose a config next time you reboot.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+This was originally made by Pablo Bondia-Luttiau and Daël Mombo-Mombo
+
+## License
+[GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
