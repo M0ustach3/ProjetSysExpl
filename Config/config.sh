@@ -22,7 +22,8 @@ if [ $exitstatus = 0 ]; then
         if [ $exitstatus = 0 ]; then
             # If the file does not exist
             if [[ ! -e "$PARTITION" ]]; then
-              echo "Partition does not exist";
+              echo -e "\e[31m[ERROR] Partition does not exist\e[0m";
+              logger -t ConfigProfiles -p local0.err "Partition $PARTITION does not exist";
               exit 1;
             else
               # If the directory doesn't exist, create it
@@ -30,6 +31,7 @@ if [ $exitstatus = 0 ]; then
                 sudo mkdir /media/encryptedPartition;
               else
                 echo -e "\e[34m[INFO] /media/encryptedPartition already exists, skipping directory creation...\e[0m";
+                logger -t ConfigProfiles -p local0.info "/media/encryptedPartition already exists";
               fi
               # Get the password partition from whiptail input box
               PASSWORD=$(whiptail --passwordbox "Please enter your encrypted partition password" 8 78 --title "$PARTITION password" 3>&1 1>&2 2>&3)
@@ -45,15 +47,17 @@ if [ $exitstatus = 0 ]; then
                   /usr/bin/thunar /media/encryptedPartition/;
                   # TODO make xdg-open work to open folder with user's default application (not necessarly thunar)
                   # xdg-open /media/encryptedPartition/;
-                  exit 0;
               else
+                  logger -t ConfigProfiles -p local0.warning "User cancelled password input";
                   exit 1;
               fi
             fi
-            exit 0;
         else
+          logger -t ConfigProfiles -p local0.warning "User cancelled partition path input";
             exit 1;
         fi
+        echo -e "\e[32m[SUCCESS] Successfully switched to PRO configuration\e[0m";
+        logger -t ConfigProfiles -p local0.info "Successfully switched to PRO configuration";
       ;;
       # Case TRAIN
       2 )
@@ -63,6 +67,8 @@ if [ $exitstatus = 0 ]; then
         /usr/bin/libreoffice;
         # TODO make nohup work to detach libreoffice process from terminal (stop showing messages in the terminal)
         #nohup /usr/bin/libreoffice > /dev/null 2>&1 &
+        echo -e "\e[32m[SUCCESS] Successfully switched to TRAIN configuration\e[0m";
+        logger -t ConfigProfiles -p local0.info "Successfully switched to TRAIN configuration";
       ;;
       # Case PERSONAL
       3 )
@@ -72,11 +78,12 @@ if [ $exitstatus = 0 ]; then
         /usr/bin/firefox https://www.qwant.com;
         # TODO make xdg-open work to open the link with default browser (not necessarly firefox)
         # xdg-open https://www.qwant.com;
-        exit 0;
+        echo -e "\e[32m[SUCCESS] Successfully switched to PERSONAL configuration\e[0m";
+        logger -t ConfigProfiles -p local0.info "Successfully switched to PERSONAL configuration";
       ;;
     esac
-    exit 0;
 else
+    logger -t ConfigProfiles -p local0.warning "User cancelled profile switch";
     exit 1;
 fi
 exit 0;
