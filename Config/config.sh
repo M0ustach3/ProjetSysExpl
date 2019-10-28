@@ -44,12 +44,15 @@ if [ $exitstatus = 0 ]; then
       2 )
         echo "Train";
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/train.jpg;
-        nohup libreoffice > /dev/null 2>&1 &
+        /usr/bin/libreoffice;
+        #nohup /usr/bin/libreoffice > /dev/null 2>&1 &
       ;;
       3 )
         echo "Perso";
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/perso.png;
-        xdg-open https://www.qwant.com;
+        /usr/bin/firefox https://www.qwant.com;
+        #xdg-open https://www.qwant.com;
+        exit 0;
       ;;
     esac
     exit 0;
@@ -57,3 +60,4 @@ else
     echo "Vous avez annulé";
     exit 1;
 fi
+exit 0;
