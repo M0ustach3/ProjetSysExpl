@@ -30,7 +30,8 @@ if [ $exitstatus = 0 ]; then
               if [ $exitstatus = 0 ]; then
                   echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
                   sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
-                  xdg-open /media/encryptedPartition/;
+                  /usr/bin/thunar /media/encryptedPartition/;
+                  #xdg-open /media/encryptedPartition/;
                   exit 0;
               else
                   exit 1;
