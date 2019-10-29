@@ -81,18 +81,26 @@ backup(){
 		if [[ ! -z "$3" ]]; then
 			echo -e "\e[34m[INFO] \t--> Creating tar.gz file...\e[0m";
 			tar --create -z -P --file=/media/backupPartition/archive.`date --rfc-3339=date`.tar.gz /media/backupContainer;
+			# Send a notification to the user
+			notify-send 'Backup' 'Successfuly backed up and compressed your data !' --icon=dialog-information;
 		else
 			echo -e "\e[34m[INFO] \t--> Backing up...\e[0m";
 			rsync -rav /media/backupContainer/* /media/backupPartition;
+			# Send a notification to the user
+			notify-send 'Backup' 'Successfuly backed up your data !' --icon=dialog-information;
 		fi
 	else
 		# Partition -> Container
 		if [[ ! -z "$3" ]]; then
 			echo -e "\e[34m[INFO] \t--> Creating tar.gz file...\e[0m";
 			tar --create -z -P --file=/media/backupContainer/archive.`date --rfc-3339=date`.tar.gz /media/backupPartition;
+			# Send a notification to the user
+			notify-send 'Backup' 'Successfuly backed up and compressed your data !' --icon=dialog-information;
 		else
 			echo -e "\e[34m[INFO] \t--> Backing up...\e[0m";
 			rsync -rav /media/backupPartition/* /media/backupContainer;
+			# Send a notification to the user
+			notify-send 'Backup' 'Successfuly backed up your data !' --icon=dialog-information;
 		fi
 	fi
 
