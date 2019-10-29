@@ -4,7 +4,7 @@ daemon is a program meant to change the wallpaper every 30 mins.
 
 ## Installation
 
-You can install the daemon by typing : 
+You can install the daemon by typing :
 
 ```bash
 ./install.sh # Installs the daemon
