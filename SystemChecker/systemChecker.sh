@@ -36,22 +36,31 @@ usage(){
 	echo -e "";
 }
 
+SHORTOPTS="husrb";
+LONGOPTS="help,user,system,resources,boot";
+PROGNAME=${0##*/};
 
+
+ARGS=$(getopt -s bash --options $SHORTOPTS  \
+  --longoptions $LONGOPTS --name $PROGNAME -- "$@" )
+
+eval set -- "$ARGS"
 
 # Handling options
-while getopts ":husrb" opt; do
-	case ${opt} in
+while true; do
+	case $1 in
 		# Help case
-		h )
+		-h|--help)
 			help;
+			exit 0;
 		;;
 		# Case of the user
-		u )
+		-u|--user )
 			user=$(whoami);
 			echo -e "---> The current connected user is \e[36m$user\e[0m\n";
 		;;
 		# Case of the system info
-		s )
+		-s|--system )
 			# Get processor type
 			proc_type=$(hostnamectl | tail -n 1 | cut -d ':' -f2);
 			# Get the OS
@@ -80,7 +89,7 @@ while getopts ":husrb" opt; do
 			echo "";
 		;;
 		# Case of the resources
-		r )
+		-r|--resources )
 			# Get all the numbers from free, with formatted output
 			all_data=$(free -m | sed -n '/ /s/ \+/ /gp' | tail -n 2 | cut -d ':' -f2 | tr '\n' ' ' );
 			used_ram=$(echo $all_data | cut -d ' ' -f2);
@@ -133,7 +142,7 @@ while getopts ":husrb" opt; do
 			fi
 			echo "";
 		;;
-		b )
+		-b|--boot )
 			echo -e "---> Boot errors";
 			# This counts the number of lines starting and ending with -- No entries --.
 			number_of_entries=$(journalctl -xb -p crit | grep -E "^\-\- No entries \-\-$" | wc -l);
@@ -143,18 +152,17 @@ while getopts ":husrb" opt; do
 				echo -e "\t\e[31mBoot errors were found, please check your boot logs\e[0m";
 			fi
 		;;
-		# Unknown option
-		\? )
-			echo -e "Invalid option : \e[31m-$OPTARG\e[0m" 1>&2;
-			usage;
-			exit 1;
+		-- )
+			shift;
+			break;
 		;;
 		# All the other cases
 		* )
-			usage;
-			exit 1;
+			shift;
+			break;
 		;;
 	esac
+	shift
 done
-shift $((OPTIND -1))
+
 exit 0
