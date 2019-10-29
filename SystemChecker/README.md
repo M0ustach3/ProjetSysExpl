@@ -4,16 +4,30 @@ SystemChecker is a program meant to show a recap of the state of the system.
 
 ## Installation
 
-This program does not need to be installed. It can be run inside this folder. You can view the manual by typing
+This program does not need to be installed. It can be run inside this folder.
 
+## Manual
+To check the MAN page of SystemChecker, use :
 ```bash
 man ./systemChecker.man
 ```
+You can also check a short manual by typing :
+```bash
+./systemChecker.sh -h # Show the help
+```
+## Options
+| Option        | Description           |
+| :-------------: |:-------------:|
+| `-h`      | Show the help and exit |
+|`-u`|Print the current connected user|
+|`-s`|Print system info (OS, proc type, etc.)|
+|`-r`|Print system resources (RAM and Swap usage)|
+|`-b`|Tells if critical boot errors were found|
 
-## Usage
+
+## Examples
 
 ```bash
-./systemChecker.sh -h #Show the help and exit
 ./systemChecker -u -r #Show the user and the resources
 ./systemChecker -b -s #Show the critical boot errors and the system information
 ```
