@@ -2,30 +2,30 @@
 .SH NAME
 SystemChecker. A simple tool to check various system specs
 .SH SYNOPSIS
-Usage : ./state.sh [-h] [-u] [-s] [-r] [-b]
+Usage : ./state.sh [-h | --help] [-u | --user] [-s | --system] [-r | --resources] [-b | --boot]
 .PP
-.B -h
+.B -h | --help
 \tPrint the help and quit the program
 .PP
-.B -u
+.B -u | --user
 \tPrint the current connected user
 .PP
-.B -s
+.B -s | --system
 \tPrint all the system information
 .PP
-.B -r
+.B -r | --resources
 \tPrint the resources usage
 .PP
-.B -b
+.B -b | --boot
 \tPrint if critical boot errors were found
 .SH EXAMPLES
 .B ./state.sh -h\t
 Print the help
 .PP
-.B ./state.sh -us\t
+.B ./state.sh -u --system\t
 Print the user information, as well as system information
 .PP
-.B ./state.sh -rus\t
+.B ./state.sh -rs --user\t
 Print the resources usage, then the user info, and finally the system info
 .SH SEE ALSO
 .B uname
@@ -36,10 +36,6 @@ Print the resources usage, then the user info, and finally the system info
 .PP
 .B free
 .SH BUGS
-A bug was found if multiple users were logged in. E.g, 
-.B who
-returned multiple users. This bug was patched by taking only the top one.
-.PP
 The program doesn't display any colors if the OS is BSD-Based.
 .SH AUTHOR
 Pablo Bondia-Luttiau, Daël Mombo-Mombo
