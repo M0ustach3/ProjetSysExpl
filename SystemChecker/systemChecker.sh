@@ -4,7 +4,7 @@
 # A custom banner to be printed in all cases
 banner(){
 	echo -e "\e[32m
-#   ____  _  _  ____  ____  ____  _  _     ___  _  _  ____  ___  __ _  ____  ____ 
+#   ____  _  _  ____  ____  ____  _  _     ___  _  _  ____  ___  __ _  ____  ____
 #  / ___)( \/ )/ ___)(_  _)(  __)( \\/ )   / __)/ )( \\(  __)/ __)(  / )(  __)(  _ \\
 #  \\___ \\ )  / \\___ \\  )(   ) _) / \\/ \\  ( (__ ) __ ( ) _)( (__  )  (  ) _)  )   /
 #  (____/(__/  (____/ (__) (____)\\_)(_/   \\___)\\_)(_/(____)\\___)(__\\_)(____)(__\\_)
@@ -47,7 +47,7 @@ while getopts ":husrb" opt; do
 		;;
 		# Case of the user
 		u )
-			user=$(who | cut -d ' ' -f 1 | head -n 1);
+			user=$(whoami);
 			echo -e "---> The current connected user is \e[36m$user\e[0m\n";
 		;;
 		# Case of the system info
@@ -58,7 +58,7 @@ while getopts ":husrb" opt; do
 			os=$(hostnamectl | tail -n 3 | head -n 1 | cut -d ':' -f2);
 			# Get the machine name
 			machine_name=$(uname -n);
-			
+
 			# Get the date of the last update of the kernel
 			kernel_date=$(uname -v | cut -d ' ' -f 5,4,8);
 			echo -e "---> Recap of \e[36m$machine_name\e[0m : ";
@@ -98,7 +98,7 @@ while getopts ":husrb" opt; do
 			integer_used_swap=$(( $((100 * $used_ram)) / $total_ram ));
 			echo -e "---> Resources used";
 
-			######################## RAM ###################### 
+			######################## RAM ######################
 
 			# Green output (RAM percentage between 0 and 50)
 			if [ $integer_used_ram -ge 0 -a $integer_used_ram -lt 50 ]; then
@@ -115,7 +115,7 @@ while getopts ":husrb" opt; do
 				logger -t SystemChecker "Free and Total RAM couldn't be determined correctly (using free). Got result $integer_used_ram";
 			fi
 
-			######################## Swap ###################### 
+			######################## Swap ######################
 
 			# Green output (Swap percentage between 0 and 50)
 			if [ $integer_used_swap -ge 0 -a $integer_used_swap -lt 50 ]; then
