@@ -43,6 +43,8 @@ if [ $exitstatus = 0 ]; then
                   echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
                   # Mount the partition
                   sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
+                  # Send a notification to the user
+                  notify-send 'Config' 'Successfuly switched to PRO profile' --icon=dialog-information;
                   # Open the folder with thunar
                   /usr/bin/thunar /media/encryptedPartition/;
                   # TODO make xdg-open work to open folder with user's default application (not necessarly thunar)
@@ -63,23 +65,27 @@ if [ $exitstatus = 0 ]; then
       2 )
         # Change the wallpaper
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/train.jpg;
+        # Send a notification to the user
+        notify-send 'Config' 'Successfuly switched to TRAIN profile' --icon=dialog-information;
+        echo -e "\e[32m[SUCCESS] Successfully switched to TRAIN configuration\e[0m";
+        logger -t ConfigProfiles -p local0.info "Successfully switched to TRAIN configuration";
         # Open libreoffice
         /usr/bin/libreoffice;
         # TODO make nohup work to detach libreoffice process from terminal (stop showing messages in the terminal)
         #nohup /usr/bin/libreoffice > /dev/null 2>&1 &
-        echo -e "\e[32m[SUCCESS] Successfully switched to TRAIN configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to TRAIN configuration";
       ;;
       # Case PERSONAL
       3 )
         # Change the wallpaper
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/perso.png;
+        echo -e "\e[32m[SUCCESS] Successfully switched to PERSONAL configuration\e[0m";
+        logger -t ConfigProfiles -p local0.info "Successfully switched to PERSONAL configuration";
+        # Send a notification to the user
+        notify-send 'Config' 'Successfuly switched to PERSONAL profile' --icon=dialog-information;
         # Open firefox
         /usr/bin/firefox https://www.qwant.com;
         # TODO make xdg-open work to open the link with default browser (not necessarly firefox)
         # xdg-open https://www.qwant.com;
-        echo -e "\e[32m[SUCCESS] Successfully switched to PERSONAL configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to PERSONAL configuration";
       ;;
     esac
 else
