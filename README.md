@@ -6,6 +6,14 @@ This project is meant to be multiple exercises for the OS course at ESIEA Laval.
 - Config (exercise 3) : change profiles at startup
 - Daemon (exercise 4) : change wallpaper every 30 mins
 
+| Exercise        | Points           |
+| ------------- |:-------------:|
+| Backup      | 7 |
+| SystemChecker      | 3      |
+| Config | 7      |
+| Daemon | 3      |
+| *TOTAL* | 20      |
+
 ## Badges
 [![GPLv3 license](https://img.shields.io/github/license/M0ustach3/ProjetSysExpl?style=for-the-badge)](https://choosealicense.com/licenses/gpl-3.0/)
 
