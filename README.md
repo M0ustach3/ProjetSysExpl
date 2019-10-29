@@ -1,6 +1,5 @@
 # OS Project
 
-[Description](#roadmap)
 --------------------------------
 
 ## Description
@@ -17,6 +16,30 @@ This project is meant to be multiple exercises for the OS course at ESIEA Laval.
 | Config | 7      |
 | Daemon | 3      |
 | *TOTAL* | 20      |
+
+--------------------------------
+## Table Of Contents
+
+1. [Badges](#badges)
+2. [Visuals](#visuals)
+3. [Roadmap](#roadmap)
+4. [Important Notes](#important-notes)
+  - [Backup](#backup)
+  - [SystemChecker](#systemchecker)
+  - [Config](#config)
+  - [Daemon](#daemon)
+5. [Prerequisites](#prerequisites)
+6. [Installation](#installation)
+  - [Backup](#backup-1)
+  - [SystemChecker](#systemchecker-1)
+  - [Config](#config-1)
+  - [Daemon](#daemon-1)
+7. [Usage](#usage)
+8. [Support](#support)
+9. [Contributing](#contributing)
+10. [Authors](#authors)
+11. [License](#license)
+12. [Project Status](#project-status)
 
 --------------------------------
 
