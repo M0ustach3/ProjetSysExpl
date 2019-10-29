@@ -19,21 +19,14 @@ banner
 # Custom help function
 help(){
 	echo -e "Welcome to \e[32mSystemChecker\e[0m ! ";
-	echo -e "\tThis is the help of the possible options : ";
-	echo -e "\t-h\tPrint this help and exit";
-	echo -e "\t-u\tPrint the current logged in user";
-	echo -e "\t-s\tPrint the system information";
-	echo -e "\t-r\tPrint the resources usage";
-	echo -e "\t-b\tPrint if critical boot errors were found";
-	echo -e "The log tags of this program can be found with tag \"SystemChecker\" under /var/log/syslog or with journalctl"
-	echo -e "";
-}
-
-# Custom usage function
-usage(){
-	echo -e "\tUsage : $0 [arguments]";
-	echo -e "\tYou can check [arguments] (the help) by typing $0 -h";
-	echo -e "";
+	echo "\
+	Usage : ./systemChecker.sh [OPTION...]
+	-h, --help; Print the help and exit
+	-u, --user; Print the current logged in user
+	-s, --system; Print the system information
+	-r, --resources; Print the resources usage
+	-b, --boot; Print if critical boot errors were found
+	" | column -t -s ";"
 }
 
 SHORTOPTS="husrb";
