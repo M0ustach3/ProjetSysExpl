@@ -21,4 +21,4 @@ while true; do
 	sleep 30m;
 done
 # The next line is basically useless.. You know, coding norms...
-exit 0
+exit 0;

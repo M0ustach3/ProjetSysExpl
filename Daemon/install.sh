@@ -25,9 +25,12 @@ sudo cp /tmp/daemonWallpaper.service /etc/systemd/system/;
 # Reload the daemons
 echo -e "\e[34m[INFO] Reloading daemons...\e[0m";
 sudo systemctl daemon-reload;
+# Stop the previous daemon (if existing)
+echo -e "\e[34m[INFO] Trying to stop daemon...\e[0m";
+sudo systemctl stop daemonWallpaper.service;
 # Start the daemon
 echo -e "\e[34m[INFO] Starting daemon...\e[0m";
-sudo systemctl start daemonWallpaper;
+sudo systemctl start daemonWallpaper.service;
 # Delete the temp service file
 echo -e "\e[34m[INFO] Deleting temp files...\e[0m";
 rm /tmp/daemonWallpaper.service;
