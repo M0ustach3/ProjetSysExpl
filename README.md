@@ -53,6 +53,7 @@ _Coming soon..._
 - Help can be shown with ```-h``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
 - Help can be shown with ```--help``` for every script that needs it (SystemChecker and Backup):heavy_multiplication_x:
 - Log actions in journal :heavy_check_mark:
+- Detached window from profile chooser with nohup and redirect to `/dev/null` :heavy_multiplication_x:
 
 --------------------------------
 
