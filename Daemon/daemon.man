@@ -1,0 +1,45 @@
+.TH Daemon 1 "30 October 2019" "version 1.0"
+.SH NAME
+Daemon. Daemon used to change the wallpaper every 30 minutes.
+.SH SYNOPSIS
+Usage : ./daemon.sh [-v,--verbose] [-h,--help] (-i,--install | -u,--uninstall)
+.PP
+.B -h, --help
+Print the help and quit the program.
+.PP
+.B -v, --verbose
+Sets the verbose output.
+.B THIS OPTION HAS TO BE PUT FIRST TO WORK
+.PP
+.B -i, --install
+Installs the daemon
+.PP
+.B -u, --uninstall
+Uninstalls the daemon
+.PP
+.SH EXAMPLES
+.B ./daemon.sh --help\t
+Print the help
+.PP
+.B ./daemon.sh --verbose -i\t
+Installs the daemon with verbose output
+.PP
+.B ./daemon.sh -v --uninstall\t
+Uninstalls the daemon with verbose output
+.PP
+.SH SEE ALSO
+.B getopt
+.PP
+.SH BUGS
+If the -v option is not put in first, the verbose output won't enable.
+.PP
+If you try to call the script with both
+.B --install
+and
+.B --uninstall
+options, only the first one will be considered.
+.SH AUTHOR
+Pablo Bondia-Luttiau, Daël Mombo-Mombo
+.SH COPYRIGHT
+Copyright © 2019 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
