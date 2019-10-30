@@ -48,7 +48,7 @@ while true; do
       # Send a notification to the user
       notify-send 'Config' 'Successfuly installed Config ! Check out the menu by rebooting !' --icon=dialog-information;
       if (whiptail --title "Reboot" --yesno "Would you like to reboot to check out the changes ? BE SURE TO CHECK OUT YOUR WORK BEFORE SELECTING YES" 8 78); then
-          sudo sytemctl reboot;
+          sudo systemctl reboot;
       fi
       exit 0;
     ;;
