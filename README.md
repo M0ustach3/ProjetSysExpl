@@ -91,7 +91,7 @@ No need to install, just run ```./backup.sh -h``` to launch the program. **We st
 ### SystemChecker
 No need to install, just run ```./systemChecker.sh -h``` to launch the program. **We strongly recommend to check out the manual before doing anything... RTFM with** ```man ./systemChecker.man```
 ### Config
-To install, just run ```./install.sh``` to install all the files in the correct locations.
+No need to install, just run ```./config.sh -h``` to launch the program. **We strongly recommend to check out the manual before doing anything... RTFM with** ```man ./config.man```
 ### Daemon
 No need to install, just run ```./daemon.sh -h``` to launch the program. **We strongly recommend to check out the manual before doing anything... RTFM with** ```man ./daemon.man```
 
