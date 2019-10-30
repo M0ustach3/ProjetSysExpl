@@ -28,6 +28,7 @@ help(){
 	echo -e "\t-p [FILE]\tThe partition path *MANDATORY*";
 	echo -e "\t-f\tFROM, this can take either 'container' or 'partition' values";
 	echo -e "\t-t\tTO, this can take either 'container' or 'partition' values";
+	echo -e "\t-s\tCompress into a .tar.gz compressed file";
 	echo -e "";
 }
 # Custom usage function
