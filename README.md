@@ -93,7 +93,7 @@ No need to install, just run ```./systemChecker.sh -h``` to launch the program. 
 ### Config
 To install, just run ```./install.sh``` to install all the files in the correct locations.
 ### Daemon
-To install, just run ```./install.sh``` to install all the files in the correct locations.
+No need to install, just run ```./daemon.sh -h``` to launch the program. **We strongly recommend to check out the manual before doing anything... RTFM with** ```man ./daemon.man```
 
 --------------------------------
 
