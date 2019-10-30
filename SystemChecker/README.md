@@ -18,11 +18,11 @@ You can also check a short manual by typing :
 ## Options
 | Option        | Description           |
 | :-------------: |:-------------:|
-| `-h`      | Show the help and exit |
-|`-u`|Print the current connected user|
-|`-s`|Print system info (OS, proc type, etc.)|
-|`-r`|Print system resources (RAM and Swap usage)|
-|`-b`|Tells if critical boot errors were found|
+| `-h` or `--help`     | Show the help and exit |
+|`-u` or `--user`|Print the current connected user|
+|`-s` or `--system`|Print system info (OS, proc type, etc.)|
+|`-r` or `--resources`|Print system resources (RAM and Swap usage)|
+|`-b` or `--boot`|Tells if critical boot errors were found|
 
 
 ## Examples

@@ -2,6 +2,6 @@
 Encoding=UTF-8
 Name=configProfiles
 Comment=Configuration profiles
-Exec=/bin/bash /opt/config.sh
+Exec=/bin/bash /opt/configProfiles.sh
 Terminal=true
 Type=Application

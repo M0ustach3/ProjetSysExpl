@@ -1,95 +1,80 @@
 #!/bin/bash
 
-# Prompt with whiptail
-OPTION=$(whiptail --title "Configuration" --menu "Choose your profile" 15 60 3 \
-"1" "Professionnal" \
-"2" "Train" \
-"3" "Personal" 3>&1 1>&2 2>&3)
-# Remember the last exit code of whiptail
-exitstatus=$?
-# If enter or OK was pressed
-if [ $exitstatus = 0 ]; then
-    case $OPTION in
-      # Case PRO
-      1 )
-        # Change the wallpaper
-        xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/pro.jpg;
-        # Get the text of the input box
-        PARTITION=$(whiptail --inputbox "Please enter the path of your encrypted partition" 8 78 --title "Opening partition" 3>&1 1>&2 2>&3);
-        # Remember the last exit code of whiptail
-        exitstatus=$?
-        # If enter or OK was pressed
-        if [ $exitstatus = 0 ]; then
-            # If the file does not exist
-            if [[ ! -e "$PARTITION" ]]; then
-              echo -e "\e[31m[ERROR] Partition does not exist\e[0m";
-              logger -t ConfigProfiles -p local0.err "Partition $PARTITION does not exist";
-              exit 1;
-            else
-              # If the directory doesn't exist, create it
-              if [[ ! -d /media/encryptedPartition ]]; then
-                sudo mkdir /media/encryptedPartition;
-              else
-                echo -e "\e[34m[INFO] /media/encryptedPartition already exists, skipping directory creation...\e[0m";
-                logger -t ConfigProfiles -p local0.info "/media/encryptedPartition already exists";
-              fi
-              # Get the password partition from whiptail input box
-              PASSWORD=$(whiptail --passwordbox "Please enter your encrypted partition password" 8 78 --title "$PARTITION password" 3>&1 1>&2 2>&3)
-              # Remember the last exit code of whiptail
-              exitstatus=$?
-              # If enter or OK was pressed
-              if [ $exitstatus = 0 ]; then
-                  # Put the password inside the cryptsetup open command
-                  echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
-                  # Mount the partition
-                  sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
-                  # Send a notification to the user
-                  notify-send 'Config' 'Successfuly switched to PRO profile' --icon=dialog-information;
-                  # Open the folder with thunar
-                  /usr/bin/thunar /media/encryptedPartition/;
-                  # TODO make xdg-open work to open folder with user's default application (not necessarly thunar)
-                  # xdg-open /media/encryptedPartition/;
-              else
-                  logger -t ConfigProfiles -p local0.warning "User cancelled password input";
-                  exit 1;
-              fi
-            fi
-        else
-          logger -t ConfigProfiles -p local0.warning "User cancelled partition path input";
-            exit 1;
-        fi
-        echo -e "\e[32m[SUCCESS] Successfully switched to PRO configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to PRO configuration";
+
+# Custom help function
+help(){
+	echo -e "Welcome to \e[32mConfig\e[0m ! ";
+	echo "\
+	Usage : ./config.sh [OPTION...]
+	-h, --help; Print the help and exit
+	-i, --install; Installs the daemon
+  -u, --uninstall; Uninstalls the daemon
+  -v, --verbose; Sets the verbose message output (HAS TO BE PUT AS THE FIRST OPTION)
+	" | column -t -s ";"
+}
+
+PROGNAME=${0##*/};
+SHORTOPTS="hiuv";
+LONGOPTS="help,install,uninstall,verbose";
+
+
+ARGS=$(getopt -s bash --options $SHORTOPTS  \
+  --longoptions $LONGOPTS --name $PROGNAME -- "$@" );
+
+eval set -- "$ARGS";
+
+
+while true; do
+	case $1 in
+        # Help case
+    -h|--help)
+      help;
+      exit 0;
+    ;;
+    -v|--verbose)
+      VERBOSE=1;
+      shift;
+    ;;
+    -i|--install)
+      (( VERBOSE )) && echo -e "\e[34m[INFO] Copying script to /opt...\e[0m";
+      # Copy the config script inside /opt
+      sudo cp ./configProfiles.sh /opt;
+      (( VERBOSE )) && echo -e "\e[34m[INFO] Copying .desktop file to /etc/xdg/autostart...\e[0m";
+      # Add the .desktop file inside the autostart folder of xdg (to be launched with xfce)
+      sudo cp ./configProfiles.desktop /etc/xdg/autostart/;
+      (( VERBOSE )) && echo -e "\e[34m[INFO] Copying backgrounds to /usr/share/xfce4/backdrops/...\e[0m";
+      # Copy the backgrounds to the backdrops folder
+      sudo cp ./backgrounds/* /usr/share/xfce4/backdrops/;
+      # Send a notification to the user
+      notify-send 'Config' 'Successfuly installed Config ! Check out the menu by rebooting !' --icon=dialog-information;
+      if (whiptail --title "Reboot" --yesno "Would you like to reboot to check out the changes ? BE SURE TO CHECK OUT YOUR WORK BEFORE SELECTING YES" 8 78); then
+          sudo sytemctl reboot;
+      fi
+      exit 0;
+    ;;
+    -u|--uninstall)
+      (( VERBOSE )) && echo -e "\e[34m[INFO] Removing script from /opt...\e[0m";
+      # Remove the script from opt
+      sudo rm /opt/configProfiles.sh;
+      (( VERBOSE )) && echo -e "\e[34m[INFO] Removing .desktop file from /etc/xdg/autostart...\e[0m";
+      # Add the .desktop file inside the autostart folder of xdg (to be launched with xfce)
+      sudo rm /etc/xdg/autostart/configProfiles.desktop;
+      (( VERBOSE )) && echo -e "\e[34m[INFO] Removing backgrounds from /usr/share/xfce4/backdrops/...\e[0m";
+      # Copy the backgrounds to the backdrops folder
+      cd /usr/share/xfce4/backdrops/ && sudo rm -f pro.jpg train.jpg perso.png;
+      # Send a notification to the user
+      notify-send 'Config' 'Successfuly uninstalled config. No more profiles for you :(' --icon=dialog-information;
+      exit 0;
+    ;;
+    -- )
+      shift;
+      break;
       ;;
-      # Case TRAIN
-      2 )
-        # Change the wallpaper
-        xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/train.jpg;
-        # Send a notification to the user
-        notify-send 'Config' 'Successfuly switched to TRAIN profile' --icon=dialog-information;
-        echo -e "\e[32m[SUCCESS] Successfully switched to TRAIN configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to TRAIN configuration";
-        # Open libreoffice
-        /usr/bin/libreoffice;
-        # TODO make nohup work to detach libreoffice process from terminal (stop showing messages in the terminal)
-        #nohup /usr/bin/libreoffice > /dev/null 2>&1 &
+    # All the other cases
+    * )
+      shift;
+      break;
       ;;
-      # Case PERSONAL
-      3 )
-        # Change the wallpaper
-        xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/perso.png;
-        echo -e "\e[32m[SUCCESS] Successfully switched to PERSONAL configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to PERSONAL configuration";
-        # Send a notification to the user
-        notify-send 'Config' 'Successfuly switched to PERSONAL profile' --icon=dialog-information;
-        # Open firefox
-        /usr/bin/firefox https://www.qwant.com;
-        # TODO make xdg-open work to open the link with default browser (not necessarly firefox)
-        # xdg-open https://www.qwant.com;
-      ;;
-    esac
-else
-    logger -t ConfigProfiles -p local0.warning "User cancelled profile switch";
-    exit 1;
-fi
+  esac
+done
 exit 0;
