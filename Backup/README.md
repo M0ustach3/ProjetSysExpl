@@ -24,6 +24,7 @@ You can also check a short manual by typing :
 |`-p`|Path of the encrypted partition (**MANDATORY**)|
 |`-f`|FROM. This can either take _container_ or _partition_ as values|
 |`-t`|TO. This can either take _container_ or _partition_ as values|
+|`-s`|Compress into a .tar.gz file|
 
 
 
