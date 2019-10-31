@@ -57,7 +57,7 @@ while true; do
 			# Get processor type
 			proc_type=$(hostnamectl | tail -n 1 | cut -d ':' -f2);
 			# Get the OS
-			os=$(hostnamectl | tail -n 3 | head -n 1 | cut -d ':' -f2);
+			os=$(lsb_release -ds);
 			# Get the machine name
 			machine_name=$(uname -n);
 
