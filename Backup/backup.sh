@@ -51,29 +51,21 @@ backup(){
 		logger -p local0.err -t Backup "Partition path does not exist ($2)";
 		exit 1;
 	fi
-	# If the directory for the partition doesn't exist, create it
-	if [[ ! -d /media/backupPartition ]]; then
-		sudo mkdir /media/backupPartition;
-	else
-		echo -e "\e[34m[INFO] /media/backupPartition already exists, skipping directory creation...\e[0m";
-		logger -p local0.info -t Backup "/media/backupPartition already exists";
-	fi
-	# If the directory for the container doesn't exist, create it
-	if [[ ! -d /media/backupContainer ]]; then
-		sudo mkdir /media/backupContainer;
-	else
-		echo -e "\e[34m[INFO] /media/backupContainer already exists, skipping directory creation...\e[0m";
-		logger -p local0.info -t Backup "/media/backupContainer already exists";
-	fi
+
+	TEMPFOLDER=$(mktemp -d);
+	mkdir `echo $TEMPFOLDER`/backupPartition;
+	mkdir `echo $TEMPFOLDER`/backupContainer;
+
+
 	echo -e "\e[34m[INFO] \t--> Mounting container...\e[0m";
 	# Mounting the container
-	sudo veracrypt "$1" /media/backupContainer;
+	sudo veracrypt "$1" `echo $TEMPFOLDER`/backupContainer;
 	echo -e "\e[34m[INFO] \t--> Opening partition...\e[0m";
 	# Opening the Partition
 	sudo cryptsetup luksOpen "$2" encryptedPartition;
 	echo -e "\e[34m[INFO] \t--> Mounting partition...\e[0m";
 	# Mounting the partition
-	sudo mount /dev/mapper/encryptedPartition /media/backupPartition;
+	sudo mount /dev/mapper/encryptedPartition `echo $TEMPFOLDER`/backupPartition;
 
 
 	############ Backup work
@@ -81,12 +73,12 @@ backup(){
 		# Container -> Partition
 		if [[ ! -z "$3" ]]; then
 			echo -e "\e[34m[INFO] \t--> Creating tar.gz file...\e[0m";
-			tar --create -z -P --file=/media/backupPartition/archive.`date --rfc-3339=date`.tar.gz /media/backupContainer;
+			tar --create -z -P --file=`echo $TEMPFOLDER`/backupPartition/archive.`date --rfc-3339=date`.tar.gz `echo $TEMPFOLDER`/backupContainer;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up and compressed your data !' --icon=dialog-information;
 		else
 			echo -e "\e[34m[INFO] \t--> Backing up...\e[0m";
-			rsync -rav /media/backupContainer/* /media/backupPartition;
+			rsync -rav `echo $TEMPFOLDER`/backupContainer/* `echo $TEMPFOLDER`/backupPartition;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up your data !' --icon=dialog-information;
 		fi
@@ -94,12 +86,12 @@ backup(){
 		# Partition -> Container
 		if [[ ! -z "$3" ]]; then
 			echo -e "\e[34m[INFO] \t--> Creating tar.gz file...\e[0m";
-			tar --create -z -P --file=/media/backupContainer/archive.`date --rfc-3339=date`.tar.gz /media/backupPartition;
+			tar --create -z -P --file=`echo $TEMPFOLDER`/backupContainer/archive.`date --rfc-3339=date`.tar.gz `echo $TEMPFOLDER`/backupPartition;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up and compressed your data !' --icon=dialog-information;
 		else
 			echo -e "\e[34m[INFO] \t--> Backing up...\e[0m";
-			rsync -rav /media/backupPartition/* /media/backupContainer;
+			rsync -rav `echo $TEMPFOLDER`/backupPartition/* `echo $TEMPFOLDER`/backupContainer;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up your data !' --icon=dialog-information;
 		fi
@@ -111,13 +103,12 @@ backup(){
 	sudo veracrypt -d "$1";
 	echo -e "\e[34m[INFO] \t--> Unmounting partition...\e[0m";
 	# Unmount the partition
-	sudo umount /media/backupPartition;
+	sudo umount `echo $TEMPFOLDER`/backupPartition;
 	# Close the partition
 	sudo cryptsetup luksClose encryptedPartition;
 	echo -e "\e[34m[INFO] \t--> Removing directories...\e[0m";
 	# Remove the useless directories
-	sudo rmdir /media/backupContainer;
-	sudo rmdir /media/backupPartition;
+	rm -rf `echo $TEMPFOLDER`/;
 }
 
 
