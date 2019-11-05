@@ -51,7 +51,7 @@ _Coming soon..._
 - Provide option to compress backups :heavy_check_mark:
 - Added MAN pages for every script that needs it (SystemChecker and Backup) :heavy_check_mark:
 - Help can be shown with ```-h``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
-- Help can be shown with ```--help``` for every script that needs it (SystemChecker and Backup):heavy_multiplication_x:
+- Help can be shown with ```--help``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
 - Log actions in journal :heavy_check_mark:
 - Detached window from profile chooser with nohup and redirect to `/dev/null` :heavy_multiplication_x:
 
