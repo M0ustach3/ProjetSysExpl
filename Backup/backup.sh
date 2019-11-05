@@ -52,6 +52,7 @@ backup(){
 		exit 1;
 	fi
 
+	# Create a temp directory
 	TEMPFOLDER=$(mktemp -d);
 	mkdir `echo $TEMPFOLDER`/backupPartition;
 	mkdir `echo $TEMPFOLDER`/backupContainer;
