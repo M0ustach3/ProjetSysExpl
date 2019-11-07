@@ -41,10 +41,24 @@ if [ $exitstatus = 0 ]; then
               if [ $exitstatus = 0 ]; then
                   # Put the password inside the cryptsetup open command
                   echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
+                  # If the previous command failed, exit the program
+                  if [[ "$?" -ne 0 ]]; then
+                    echo -e "\e[31m[ERROR] An error occured during profile switch, check your logs\e[0m";
+                    logger -t ConfigProfiles -p local0.error "Error trying to open encrypted partition";
+                    exit 1;
+                  fi
                   # Mount the partition
                   sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
+                  # If the previous command failed, exit the program
+                  if [[ "$?" -ne 0 ]]; then
+                    echo -e "\e[31m[ERROR] An error occured during profile switch\e[0m";
+                    logger -t ConfigProfiles -p local0.error "Error trying to mount partition to /media/encryptedPartition";
+                    exit 1;
+                  fi
                   # Send a notification to the user
                   notify-send 'Config' 'Successfuly switched to PRO profile' --icon=dialog-information;
+                  echo -e "\e[32m[SUCCESS] Successfully switched to PRO configuration\e[0m";
+                  logger -t ConfigProfiles -p local0.info "Successfully switched to PRO configuration";
                   # Open the folder with thunar
                   /usr/bin/thunar /media/encryptedPartition/;
                   # TODO make xdg-open work to open folder with user's default application (not necessarly thunar)
@@ -58,8 +72,6 @@ if [ $exitstatus = 0 ]; then
           logger -t ConfigProfiles -p local0.warning "User cancelled partition path input";
             exit 1;
         fi
-        echo -e "\e[32m[SUCCESS] Successfully switched to PRO configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to PRO configuration";
       ;;
       # Case TRAIN
       2 )
