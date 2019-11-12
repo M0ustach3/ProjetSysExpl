@@ -15,7 +15,25 @@ This project is meant to be multiple exercises for the OS course at ESIEA Laval.
 | SystemChecker      | 3      |
 | Config | 7      |
 | Daemon | 3      |
+| Help ? | +7  ?    |
 | *TOTAL* | 20      |
+
+--------------------------------
+## Features
+- Hosted on GitHub with precise organization for the project (Pull requests, multiple branches, explicit commit messages, etc.).
+You can view a beautiful version of this README (and the others) on [GitHub](https://github.com/M0ustach3/ProjetSysExpl)
+- MAN pages for every script
+- Useful functions made in a different file (e.g : Library/Functions.sh)
+- Fun wallpapers.
+- Both short **AND** long options for most of the scripts
+- Documented code / READMEs
+- Respect of the Linux FHS and LSB (scripts placed under ```/opt```, temporary files are in ```/tmp```, etc.)
+- Journalization with ```systemctl``` with tags and loglevels adjusted with the level of the info
+- Signals are handled during the backup between partition and container. If the application is interrupted, the sensible partition and container are closed and unmounted. (Still a WIP for the other scripts)
+- Verbose mode available for some scripts (Still a WIP for some scripts)
+- Notifications using the XFCE desktop are sent to the user when an important information needs to be displayed
+- Graphical interface for some of the script using whiptail (It's important to notice that Backup is **MEANT TO BE WITHOUT AN INTERFACE**, thus to ease scripting using crontab to automate backups for example)
+- Last but not least, Easter Eggs. Love them.
 
 --------------------------------
 ## Table Of Contents
@@ -50,10 +68,9 @@ _Coming soon..._
 - Adapt with xdg-open to be fully compatible :heavy_multiplication_x:
 - Provide option to compress backups :heavy_check_mark:
 - Added MAN pages for every script that needs it (SystemChecker and Backup) :heavy_check_mark:
-- Help can be shown with ```-h``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
-- Help can be shown with ```--help``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
+- Help can be shown with ```-h and --help``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
 - Log actions in journal :heavy_check_mark:
-- Detached window from profile chooser with nohup and redirect to `/dev/null` :heavy_multiplication_x:
+- Detached window from profile chooser with nohup (create an orphan process) and redirect to `/dev/null` :heavy_multiplication_x:
 
 --------------------------------
 
