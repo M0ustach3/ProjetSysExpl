@@ -31,6 +31,7 @@ You can view a beautiful version of this README (and the others) on [GitHub](htt
 - Journalization with ```systemctl``` with tags and loglevels adjusted with the level of the info
 - Signals are handled during the backup between partition and container. If the application is interrupted, the sensible partition and container are closed and unmounted. (Still a WIP for the other scripts)
 - Verbose mode available for some scripts (Still a WIP for some scripts)
+- Backups can be compressed
 - Notifications using the XFCE desktop are sent to the user when an important information needs to be displayed
 - Graphical interface for some of the script using whiptail (It's important to notice that Backup is **MEANT TO BE WITHOUT AN INTERFACE**, thus to ease scripting using crontab to automate backups for example)
 - Last but not least, Easter Eggs. Love them.
