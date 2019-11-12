@@ -1,5 +1,52 @@
 #!/bin/bash
 
+# Import the functions
+source ../Library/Functions.sh;
+
+
+# Trap signals
+trap 'handler' 1 2 3 6;
+
+# Handler function for SIGHUP, SIGINT, SIGQUIT and SIGABRT
+function handler() {
+	logThis "error" "Backup was interrupted. Cleaning up..." "Backup";
+	if [[ ! -z "$CONTAINER" ]] && [[ ! -z "$TEMPFOLDER" ]]; then
+		unmountAll $CONTAINER $TEMPFOLDER;
+	elif [[ ! -z "$CONTAINER" ]]; then
+		logThis "info" "Unmounting container...";
+		# Unmounting the container
+		sudo veracrypt -d "$CONTAINER" 2>&1 /dev/null;
+	elif [[ ! -z "$TEMPFOLDER" ]]; then
+		# Unmount the partition
+		sudo umount `echo $TEMPFOLDER`/backupPartition;
+		# Close the partition
+		sudo cryptsetup luksClose encryptedPartition;
+	fi
+	if [[ ! -z "$TEMPFOLDER" ]]; then
+		cleanup $TEMPFOLDER;
+	fi
+	exit 1;
+}
+
+# Trap SIGUSR1 and SIGUSR2
+trap 'boop' 10 12;
+# Boop
+function boop() {
+	echo "
+	\$tart|ng NMap 5.21 ( http://Nmap.org ) at 2013-09-18 17:45 UTC
+	Nmap \$cAn r3p0rt F0r ThUGL@B\$.cOm (74.207.244.221)
+	Ho\$t 1z Up (0.071z laT3ncy).
+	Not sh0wN: 998 cl0\$Ed p0rt\$
+	POrT   ST4TE \$ERV!C3
+	22/tcp opEn  Ssh
+	80/tcP 0p3n  HtTp
+
+	Nmap d0n3: 1 iP AddrESz (1 h0\$t Up) \$canNed !n 1.34 secondz
+	";
+	echo "B0oP";
+	exit 1;
+}
+
 # A custom banner to be printed in all cases
 function banner(){
 	echo -e "\e[32m
@@ -30,20 +77,6 @@ function help(){
 	echo -e "\t-s\tCompress into a .tar.gz compressed file";
 	echo -e "";
 }
-
-# Log function
-function logThis() {
-	case $1 in
-		"info" )
-			echo -e "\e[34m[INFO] \t--> $2\e[0m";
-			;;
-		"error" )
-			echo -e "\e[31m[ERROR] $2\e[0m";
-			logger -t Backup -p local0.error "$2";
-			;;
-	esac
-}
-
 
 # Custom usage function
 function usage(){
@@ -104,12 +137,12 @@ function makeTempDir(){
 backup(){
 	# If the container path exists
 	if [[ ! -e "$1" ]]; then
-		logThis "error" "Container path does not exist";
+		logThis "error" "Container path does not exist" "Backup";
 		exit 1;
 	fi
 	# If the partition path exists
 	if [[ ! -e "$2" ]]; then
-		logThis "error" "Partition path does not exist";
+		logThis "error" "Partition path does not exist" "Backup";
 		exit 1;
 	fi
 
@@ -118,7 +151,7 @@ backup(){
 
 	# If the temp dir creation failed, exit
 	if [[ -z "$TEMPFOLDER" ]]; then
-		logThis "error" "Error trying to create a temp directory";
+		logThis "error" "Error trying to create a temp directory" "Backup";
 		exit 1;
 	fi
 
@@ -129,7 +162,7 @@ backup(){
 	if [[ "$choice" = "1" ]]; then
 		# If the mounted container does not contain anything, exit
 		if [[ -z "$(ls -A `echo $TEMPFOLDER`/backupContainer)" ]]; then
-			logThis "error" "Nothing to backup :(";
+			logThis "error" "Nothing to backup :(" "Backup";
 			exit 1;
 		fi
 		# Container -> Partition
@@ -147,7 +180,7 @@ backup(){
 	else
 		# If the mounted partition does not contain anything, exit
 		if [[ -z "$(ls -A `echo $TEMPFOLDER`/backupPartition)" ]]; then
-			logThis "error" "Nothing to backup :(";
+			logThis "error" "Nothing to backup :(" "Backup";
 			exit 1;
 		fi
 		# Partition -> Container
@@ -229,7 +262,7 @@ if [[ ("$FROM" == "container" && "$TO" == "partition") || ("$FROM" == "partition
 	# Start the backup
 	backup $CONTAINER $PARTITION $COMPRESS;
 else
-	logThis "error" "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help.";
+	logThis "error" "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help." "Backup";
 	exit 1;
 fi
 exit 0;

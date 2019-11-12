@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Import the functions
+source ../Library/Functions.sh;
 
 # Custom help function
 help(){
@@ -12,23 +14,6 @@ help(){
   -v, --verbose; Sets the verbose message output (HAS TO BE PUT AS THE FIRST OPTION)
 	" | column -t -s ";"
 }
-
-
-# Log function
-function logThis() {
-	case $1 in
-		"info" )
-			echo -e "\e[34m[INFO] \t--> $2\e[0m";
-			;;
-		"error" )
-			echo -e "\e[31m[ERROR] $2\e[0m";
-			logger -t ConfigProfiles -p local0.error "$2";
-			;;
-	esac
-}
-
-
-
 
 PROGNAME=${0##*/};
 SHORTOPTS="hiuv";
@@ -58,7 +43,7 @@ while true; do
       sudo cp ./configProfiles.sh /opt;
 			# If the previous command failed, exit the program
 			if [[ "$?" -ne 0 ]]; then
-				logThis "error" "Error trying to copy configProfiles.sh to /opt";
+				logThis "error" "Error trying to copy configProfiles.sh to /opt" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Copying .desktop file to /etc/xdg/autostart...";
@@ -66,7 +51,7 @@ while true; do
       sudo cp ./configProfiles.desktop /etc/xdg/autostart/;
 			# If the previous command failed, exit the program
 			if [[ "$?" -ne 0 ]]; then
-				logThis "error" "Error trying to copy configProfiles.desktop to /etc/xdg/autostart";
+				logThis "error" "Error trying to copy configProfiles.desktop to /etc/xdg/autostart" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Copying backgrounds to /usr/share/xfce4/backdrops/...";
@@ -74,7 +59,7 @@ while true; do
       sudo cp ./backgrounds/* /usr/share/xfce4/backdrops/;
 			# If the previous command failed, exit the program
 			if [[ "$?" -ne 0 ]]; then
-				logThis "error" "Error trying to copy backgrounds to /usr/share/xfce4/backdrops";
+				logThis "error" "Error trying to copy backgrounds to /usr/share/xfce4/backdrops" "ConfigProfiles";
 				exit 1;
 			fi
       # Send a notification to the user
@@ -90,7 +75,7 @@ while true; do
       sudo rm /opt/configProfiles.sh;
 			# If the previous command failed, exit the program
 			if [[ "$?" -ne 0 ]]; then
-				logThis "error" "Error trying to remove /opt/configProfiles.sh";
+				logThis "error" "Error trying to remove /opt/configProfiles.sh" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Removing .desktop file from /etc/xdg/autostart...";
@@ -98,7 +83,7 @@ while true; do
       sudo rm /etc/xdg/autostart/configProfiles.desktop;
 			# If the previous command failed, exit the program
 			if [[ "$?" -ne 0 ]]; then
-				logThis "error" "Error trying to remove /etc/xdg/autostart/configProfiles.desktop";
+				logThis "error" "Error trying to remove /etc/xdg/autostart/configProfiles.desktop" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Removing backgrounds from /usr/share/xfce4/backdrops/...";
@@ -106,7 +91,7 @@ while true; do
       cd /usr/share/xfce4/backdrops/ && sudo rm -f pro.jpg train.jpg perso.png;
 			# If the previous command failed, exit the program
 			if [[ "$?" -ne 0 ]]; then
-				logThis "error" "Error trying to remove files from /usr/share/xfce4/backdrops/";
+				logThis "error" "Error trying to remove files from /usr/share/xfce4/backdrops/" "ConfigProfiles";
 				exit 1;
 			fi
       # Send a notification to the user

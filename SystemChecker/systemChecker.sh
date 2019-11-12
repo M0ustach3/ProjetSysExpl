@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Import the functions
+source ../Library/Functions.sh;
 
 # A custom banner to be printed in all cases
 banner(){
