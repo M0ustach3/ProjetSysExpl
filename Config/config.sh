@@ -22,7 +22,7 @@ function logThis() {
 			;;
 		"error" )
 			echo -e "\e[31m[ERROR] $2\e[0m";
-			logger -t Backup -p local0.error "$2";
+			logger -t ConfigProfiles -p local0.error "$2";
 			;;
 	esac
 }
