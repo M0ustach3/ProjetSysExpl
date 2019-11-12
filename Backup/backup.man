@@ -51,6 +51,8 @@ Creates a tar.gz archive of the partition /dev/sdb5 and put it inside the Veracr
 .PP
 .B tar
 .PP
+.SH SIGNALS
+Try SIGUSR1 or SIGUSR2, fun times.
 .SH BUGS
 None. (yet...)
 .SH AUTHOR
