@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Import the functions
+source ../Library/Functions.sh;
+
+
 # A custom banner to be printed in all cases
 function banner(){
 	echo -e "\e[32m
@@ -30,20 +34,6 @@ function help(){
 	echo -e "\t-s\tCompress into a .tar.gz compressed file";
 	echo -e "";
 }
-
-# Log function
-function logThis() {
-	case $1 in
-		"info" )
-			echo -e "\e[34m[INFO] \t--> $2\e[0m";
-			;;
-		"error" )
-			echo -e "\e[31m[ERROR] $2\e[0m";
-			logger -t Backup -p local0.error "$2";
-			;;
-	esac
-}
-
 
 # Custom usage function
 function usage(){
