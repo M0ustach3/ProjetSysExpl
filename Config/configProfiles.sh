@@ -1,5 +1,27 @@
 #!/bin/bash
 
+
+# Log function
+function logThis() {
+	case $1 in
+		"info" )
+			echo -e "\e[34m[INFO] \t--> $2\e[0m";
+			;;
+		"error" )
+			echo -e "\e[31m[ERROR] $2\e[0m";
+			logger -t ConfigProfiles -p local0.error "$2";
+			;;
+    "success" )
+      echo -e "\e[32m[SUCCESS] \t--> $2\e[0m";
+      ;;
+    "warning" )
+      echo -e "\e[33m[WARNING] $2\e[0m";
+      logger -t ConfigProfiles -p local0.warning "$2";
+      ;;
+	esac
+}
+
+
 # Prompt with whiptail
 OPTION=$(whiptail --title "Configuration" --menu "Choose your profile" 15 60 3 \
 "1" "Professionnal" \
@@ -22,16 +44,14 @@ if [ $exitstatus = 0 ]; then
         if [ $exitstatus = 0 ]; then
             # If the file does not exist
             if [[ ! -e "$PARTITION" ]]; then
-              echo -e "\e[31m[ERROR] Partition does not exist\e[0m";
-              logger -t ConfigProfiles -p local0.err "Partition $PARTITION does not exist";
+              logThis "error" "Partition $PARTITION does not exist";
               exit 1;
             else
               # If the directory doesn't exist, create it
               if [[ ! -d /media/encryptedPartition ]]; then
                 sudo mkdir /media/encryptedPartition;
               else
-                echo -e "\e[34m[INFO] /media/encryptedPartition already exists, skipping directory creation...\e[0m";
-                logger -t ConfigProfiles -p local0.info "/media/encryptedPartition already exists";
+                logThis "info" "/media/encryptedPartition already exists";
               fi
               # Get the password partition from whiptail input box
               PASSWORD=$(whiptail --passwordbox "Please enter your encrypted partition password" 8 78 --title "$PARTITION password" 3>&1 1>&2 2>&3)
@@ -43,33 +63,30 @@ if [ $exitstatus = 0 ]; then
                   echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
                   # If the previous command failed, exit the program
                   if [[ "$?" -ne 0 ]]; then
-                    echo -e "\e[31m[ERROR] An error occured during profile switch, check your logs\e[0m";
-                    logger -t ConfigProfiles -p local0.error "Error trying to open encrypted partition";
+                    logThis "error" "Error trying to open encrypted partition";
                     exit 1;
                   fi
                   # Mount the partition
                   sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
                   # If the previous command failed, exit the program
                   if [[ "$?" -ne 0 ]]; then
-                    echo -e "\e[31m[ERROR] An error occured during profile switch\e[0m";
-                    logger -t ConfigProfiles -p local0.error "Error trying to mount partition to /media/encryptedPartition";
+                    logThis "error" "Error trying to mount partition to /media/encryptedPartition";
                     exit 1;
                   fi
                   # Send a notification to the user
                   notify-send 'Config' 'Successfuly switched to PRO profile' --icon=dialog-information;
-                  echo -e "\e[32m[SUCCESS] Successfully switched to PRO configuration\e[0m";
-                  logger -t ConfigProfiles -p local0.info "Successfully switched to PRO configuration";
+                  logThis "success" "Successfully switched to PRO configuration";
                   # Open the folder with thunar
                   /usr/bin/thunar /media/encryptedPartition/;
                   # TODO make xdg-open work to open folder with user's default application (not necessarly thunar)
                   # xdg-open /media/encryptedPartition/;
               else
-                  logger -t ConfigProfiles -p local0.warning "User cancelled password input";
+                  logThis "warning" "User cancelled password input";
                   exit 1;
               fi
             fi
         else
-          logger -t ConfigProfiles -p local0.warning "User cancelled partition path input";
+            logThis "warning" "User cancelled partition path input";
             exit 1;
         fi
       ;;
@@ -79,8 +96,7 @@ if [ $exitstatus = 0 ]; then
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/train.jpg;
         # Send a notification to the user
         notify-send 'Config' 'Successfuly switched to TRAIN profile' --icon=dialog-information;
-        echo -e "\e[32m[SUCCESS] Successfully switched to TRAIN configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to TRAIN configuration";
+        logThis "success" "Successfully switched to TRAIN configuration";
         # Open libreoffice
         /usr/bin/libreoffice;
         # TODO make nohup work to detach libreoffice process from terminal (stop showing messages in the terminal)
@@ -90,8 +106,7 @@ if [ $exitstatus = 0 ]; then
       3 )
         # Change the wallpaper
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image --set /usr/share/xfce4/backdrops/perso.png;
-        echo -e "\e[32m[SUCCESS] Successfully switched to PERSONAL configuration\e[0m";
-        logger -t ConfigProfiles -p local0.info "Successfully switched to PERSONAL configuration";
+        logThis "success" "Successfully switched to PERSONAL configuration";
         # Send a notification to the user
         notify-send 'Config' 'Successfuly switched to PERSONAL profile' --icon=dialog-information;
         # Open firefox
@@ -101,7 +116,7 @@ if [ $exitstatus = 0 ]; then
       ;;
     esac
 else
-    logger -t ConfigProfiles -p local0.warning "User cancelled profile switch";
+    logThis "warning" "User cancelled profile switch";
     exit 1;
 fi
 exit 0;
