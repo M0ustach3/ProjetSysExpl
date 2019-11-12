@@ -31,15 +31,17 @@ function help(){
 	echo -e "";
 }
 
-# Basic info function
-function printInfo() {
-	echo -e "\e[34m[INFO] \t--> $1\e[0m";
-}
-
-# Basic error logging function
-function printError() {
-	echo -e "\e[31m[ERROR] $1\e[0m";
-	logger -t Backup -p local0.error "$1";
+# Log function
+function logThis() {
+	case $1 in
+		"info" )
+			echo -e "\e[34m[INFO] \t--> $2\e[0m";
+			;;
+		"error" )
+			echo -e "\e[31m[ERROR] $2\e[0m";
+			logger -t Backup -p local0.error "$2";
+			;;
+	esac
 }
 
 
@@ -52,13 +54,13 @@ function usage(){
 
 # Mounting function
 function mountAll() {
-	printInfo "Mounting container...";
+	logThis "info" "Mounting container...";
 	# Mounting the container
 	sudo veracrypt "$1" `echo $3`/backupContainer;
-	printInfo "Opening partition...";
+	logThis "info" "Opening partition...";
 	# Opening the Partition
 	sudo cryptsetup luksOpen "$2" encryptedPartition;
-	printInfo "Mounting partition...";
+	logThis "info" "Mounting partition...";
 	# Mounting the partition
 	sudo mount /dev/mapper/encryptedPartition `echo $3`/backupPartition;
 
@@ -66,10 +68,10 @@ function mountAll() {
 
 # Unmounting function
 function unmountAll(){
-	printInfo "Unmounting container...";
+	logThis "info" "Unmounting container...";
 	# Unmounting the container
 	sudo veracrypt -d "$1";
-	printInfo "Unmounting partition...";
+	logThis "info" "Unmounting partition...";
 	# Unmount the partition
 	sudo umount `echo $2`/backupPartition;
 	# Close the partition
@@ -78,7 +80,7 @@ function unmountAll(){
 
 # Cleanup function
 function cleanup(){
-	printInfo "Removing directories...";
+	logThis "info" "Removing directories...";
 	# Remove the temp directories
 	rm -rf `echo $1`/;
 }
@@ -102,12 +104,12 @@ function makeTempDir(){
 backup(){
 	# If the container path exists
 	if [[ ! -e "$1" ]]; then
-		printError "Container path does not exist";
+		logThis "error" "Container path does not exist";
 		exit 1;
 	fi
 	# If the partition path exists
 	if [[ ! -e "$2" ]]; then
-		printError "Partition path does not exist";
+		logThis "error" "Partition path does not exist";
 		exit 1;
 	fi
 
@@ -116,7 +118,7 @@ backup(){
 
 	# If the temp dir creation failed, exit
 	if [[ -z "$TEMPFOLDER" ]]; then
-		printError "Error trying to create a temp directory";
+		logThis "error" "Error trying to create a temp directory";
 		exit 1;
 	fi
 
@@ -127,17 +129,17 @@ backup(){
 	if [[ "$choice" = "1" ]]; then
 		# If the mounted container does not contain anything, exit
 		if [[ -z "$(ls -A `echo $TEMPFOLDER`/backupContainer)" ]]; then
-			printError "Nothing to backup :(";
+			logThis "error" "Nothing to backup :(";
 			exit 1;
 		fi
 		# Container -> Partition
 		if [[ ! -z "$3" ]]; then
-			printInfo "Creating tar.gz file...";
+			logThis "info" "Creating tar.gz file...";
 			sudo tar --create -z -P --file=`echo $TEMPFOLDER`/backupPartition/archive.`date --rfc-3339=date`.tar.gz `echo $TEMPFOLDER`/backupContainer;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up and compressed your data !' --icon=dialog-information;
 		else
-			printInfo "Backing up...";
+			logThis "info" "Backing up...";
 			sudo rsync -av `echo $TEMPFOLDER`/backupContainer/* `echo $TEMPFOLDER`/backupPartition;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up your data !' --icon=dialog-information;
@@ -145,17 +147,17 @@ backup(){
 	else
 		# If the mounted partition does not contain anything, exit
 		if [[ -z "$(ls -A `echo $TEMPFOLDER`/backupPartition)" ]]; then
-			printError "Nothing to backup :(";
+			logThis "error" "Nothing to backup :(";
 			exit 1;
 		fi
 		# Partition -> Container
 		if [[ ! -z "$3" ]]; then
-			printInfo "Creating tar.gz file...";
+			logThis "info" "Creating tar.gz file...";
 			sudo tar --create -z -P --file=`echo $TEMPFOLDER`/backupContainer/archive.`date --rfc-3339=date`.tar.gz `echo $TEMPFOLDER`/backupPartition;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up and compressed your data !' --icon=dialog-information;
 		else
-			printInfo "Backing up...";
+			logThis "info" "Backing up...";
 			sudo rsync -av `echo $TEMPFOLDER`/backupPartition/* `echo $TEMPFOLDER`/backupContainer;
 			# Send a notification to the user
 			notify-send 'Backup' 'Successfuly backed up your data !' --icon=dialog-information;
@@ -227,7 +229,7 @@ if [[ ("$FROM" == "container" && "$TO" == "partition") || ("$FROM" == "partition
 	# Start the backup
 	backup $CONTAINER $PARTITION $COMPRESS;
 else
-	printError "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help.";
+	logThis "error" "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help.";
 	exit 1;
 fi
 exit 0;
