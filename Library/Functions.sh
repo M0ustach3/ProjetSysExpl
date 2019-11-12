@@ -15,14 +15,14 @@ function logThis() {
 			;;
 		"error" )
 			echo -e "\e[31m[ERROR] $2\e[0m";
-			logger -t ConfigProfiles -p local0.error "$2";
+			logger -t "$3" -p local0.error "$2";
 			;;
     "success" )
       echo -e "\e[32m[SUCCESS] \t--> $2\e[0m";
       ;;
     "warning" )
       echo -e "\e[33m[WARNING] $2\e[0m";
-      logger -t ConfigProfiles -p local0.warning "$2";
+      logger -t "$3" -p local0.warning "$2";
       ;;
 	esac
 }

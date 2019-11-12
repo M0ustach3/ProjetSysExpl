@@ -94,12 +94,12 @@ function makeTempDir(){
 backup(){
 	# If the container path exists
 	if [[ ! -e "$1" ]]; then
-		logThis "error" "Container path does not exist";
+		logThis "error" "Container path does not exist" "Backup";
 		exit 1;
 	fi
 	# If the partition path exists
 	if [[ ! -e "$2" ]]; then
-		logThis "error" "Partition path does not exist";
+		logThis "error" "Partition path does not exist" "Backup";
 		exit 1;
 	fi
 
@@ -108,7 +108,7 @@ backup(){
 
 	# If the temp dir creation failed, exit
 	if [[ -z "$TEMPFOLDER" ]]; then
-		logThis "error" "Error trying to create a temp directory";
+		logThis "error" "Error trying to create a temp directory" "Backup";
 		exit 1;
 	fi
 
@@ -119,7 +119,7 @@ backup(){
 	if [[ "$choice" = "1" ]]; then
 		# If the mounted container does not contain anything, exit
 		if [[ -z "$(ls -A `echo $TEMPFOLDER`/backupContainer)" ]]; then
-			logThis "error" "Nothing to backup :(";
+			logThis "error" "Nothing to backup :(" "Backup";
 			exit 1;
 		fi
 		# Container -> Partition
@@ -137,7 +137,7 @@ backup(){
 	else
 		# If the mounted partition does not contain anything, exit
 		if [[ -z "$(ls -A `echo $TEMPFOLDER`/backupPartition)" ]]; then
-			logThis "error" "Nothing to backup :(";
+			logThis "error" "Nothing to backup :(" "Backup";
 			exit 1;
 		fi
 		# Partition -> Container
@@ -219,7 +219,7 @@ if [[ ("$FROM" == "container" && "$TO" == "partition") || ("$FROM" == "partition
 	# Start the backup
 	backup $CONTAINER $PARTITION $COMPRESS;
 else
-	logThis "error" "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help.";
+	logThis "error" "-f and/or -t are non-existent or have a wrong syntax. Please check the manual or the help." "Backup";
 	exit 1;
 fi
 exit 0;

@@ -25,7 +25,7 @@ if [ $exitstatus = 0 ]; then
         if [ $exitstatus = 0 ]; then
             # If the file does not exist
             if [[ ! -e "$PARTITION" ]]; then
-              logThis "error" "Partition $PARTITION does not exist";
+              logThis "error" "Partition $PARTITION does not exist" "ConfigProfiles";
               exit 1;
             else
               # If the directory doesn't exist, create it
@@ -44,14 +44,14 @@ if [ $exitstatus = 0 ]; then
                   echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
                   # If the previous command failed, exit the program
                   if [[ "$?" -ne 0 ]]; then
-                    logThis "error" "Error trying to open encrypted partition";
+                    logThis "error" "Error trying to open encrypted partition" "ConfigProfiles";
                     exit 1;
                   fi
                   # Mount the partition
                   sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
                   # If the previous command failed, exit the program
                   if [[ "$?" -ne 0 ]]; then
-                    logThis "error" "Error trying to mount partition to /media/encryptedPartition";
+                    logThis "error" "Error trying to mount partition to /media/encryptedPartition" "ConfigProfiles";
                     exit 1;
                   fi
                   # Send a notification to the user
@@ -62,12 +62,12 @@ if [ $exitstatus = 0 ]; then
                   # TODO make xdg-open work to open folder with user's default application (not necessarly thunar)
                   # xdg-open /media/encryptedPartition/;
               else
-                  logThis "warning" "User cancelled password input";
+                  logThis "warning" "User cancelled password input" "ConfigProfiles";
                   exit 1;
               fi
             fi
         else
-            logThis "warning" "User cancelled partition path input";
+            logThis "warning" "User cancelled partition path input" "ConfigProfiles";
             exit 1;
         fi
       ;;
@@ -97,7 +97,7 @@ if [ $exitstatus = 0 ]; then
       ;;
     esac
 else
-    logThis "warning" "User cancelled profile switch";
+    logThis "warning" "User cancelled profile switch" "ConfigProfiles";
     exit 1;
 fi
 exit 0;
