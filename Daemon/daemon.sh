@@ -12,6 +12,26 @@ help(){
 	" | column -t -s ";"
 }
 
+# Log function
+function logThis() {
+	case $1 in
+		"info" )
+			echo -e "\e[34m[INFO] \t--> $2\e[0m";
+			;;
+		"error" )
+			echo -e "\e[31m[ERROR] $2\e[0m";
+			logger -t ConfigProfiles -p local0.error "$2";
+			;;
+    "success" )
+      echo -e "\e[32m[SUCCESS] \t--> $2\e[0m";
+      ;;
+    "warning" )
+      echo -e "\e[33m[WARNING] $2\e[0m";
+      logger -t ConfigProfiles -p local0.warning "$2";
+      ;;
+	esac
+}
+
 function createUnit() {
   # Get the current connected user
   local me=$(whoami);
@@ -57,23 +77,24 @@ while true; do
       createUnit > /tmp/daemonWallpaper.service;
 
       # Copy the script into /opt (the best place according to the FHS)
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Copying files to /opt...\e[0m";
+      (( VERBOSE )) && logThis "info" "Copying files to /opt...";
       sudo cp ./wallpaperChanger.sh /opt/;
       # Copy the service into the systemd folder
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Copying files to /etc/systemd/system...\e[0m";
+      (( VERBOSE )) && logThis "info" "Copying files to /etc/systemd/system...";
       sudo cp /tmp/daemonWallpaper.service /etc/systemd/system/;
       # Reload the daemons
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Reloading daemons...\e[0m";
+      (( VERBOSE )) && logThis "info" "Reloading daemons...";
       sudo systemctl daemon-reload;
       # Stop the previous daemon (if existing)
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Trying to stop daemon...\e[0m";
+      (( VERBOSE )) && logThis "info" "Trying to stop daemon...";
       sudo systemctl stop daemonWallpaper.service;
       # Start the daemon
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Starting daemon...\e[0m";
+      (( VERBOSE )) && logThis "info" "Starting daemon...";
       sudo systemctl start daemonWallpaper.service;
       # Delete the temp service file
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Deleting temp files...\e[0m";
+      (( VERBOSE )) && logThis "info" "Deleting temp files...";
       rm /tmp/daemonWallpaper.service;
+			(( VERBOSE )) && logThis "success" "Successfuly installed Daemon";
       # Send a notification to the user
       notify-send 'Daemon' 'Successfuly installed Daemon ! Enjoy your changing wallpaper !' --icon=dialog-information;
       # Exit with code 0
@@ -81,17 +102,18 @@ while true; do
     ;;
     -u|--uninstall )
       # Remove files from /opt
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Removing files from /opt...\e[0m";
+      (( VERBOSE )) && logThis "info" "Removing files from /opt...";
       sudo rm /opt/wallpaperChanger.sh;
       # Stop the previous daemon (if existing)
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Trying to stop daemon...\e[0m";
+      (( VERBOSE )) && logThis "info" "Trying to stop daemon...";
       sudo systemctl stop daemonWallpaper.service;
       # Remove .service file
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Removing service from /etc/systemd/system...\e[0m";
+      (( VERBOSE )) && logThis "info" "Removing service from /etc/systemd/system...";
       sudo rm /etc/systemd/system/daemonWallpaper.service;
       # Reload the daemons
-      (( VERBOSE )) && echo -e "\e[34m[INFO] Reloading daemons...\e[0m";
+      (( VERBOSE )) && logThis "info" "Reloading daemons...";
       sudo systemctl daemon-reload;
+			(( VERBOSE )) && logThis "success" "Successfuly uninstalled Daemon";
       # Send a notification to the user
       notify-send 'Daemon' 'Successfuly uninstalled Daemon. Sorry to see you go :(' --icon=dialog-information;
       # Exit with code 0
