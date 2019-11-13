@@ -72,6 +72,7 @@ _Coming soon..._
 - Help can be shown with ```-h and --help``` for every script that needs it (SystemChecker and Backup):heavy_check_mark:
 - Log actions in journal :heavy_check_mark:
 - Detached window from profile chooser with nohup (create an orphan process) and redirect to `/dev/null` :heavy_multiplication_x:
+- Check if a screen is available, if there is one, use `Zenity`, if there isn't, use `whiptail`. Default is `whiptail` for now :heavy_multiplication_x:
 
 --------------------------------
 
