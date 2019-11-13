@@ -28,11 +28,12 @@ help(){
 	-s, --system; Print the system information
 	-r, --resources; Print the resources usage
 	-b, --boot; Print if critical boot errors were found
+	-f, --firefox; What ? Firefox ?
 	" | column -t -s ";"
 }
 
-SHORTOPTS="husrb";
-LONGOPTS="help,user,system,resources,boot";
+SHORTOPTS="husrbf";
+LONGOPTS="help,user,system,resources,boot,firefox";
 PROGNAME=${0##*/};
 
 
@@ -146,6 +147,11 @@ while true; do
 			else
 				echo -e "\t\e[31mBoot errors were found, please check your boot logs\e[0m";
 			fi
+		;;
+		# Wut ?
+		-f | --firefox )
+			logThis "info" "Portal to another dimension were opened.";
+			nohup firefox about:robots > /dev/null 2>&1 &
 		;;
 		-- )
 			shift;
