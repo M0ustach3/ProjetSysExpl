@@ -20,7 +20,7 @@ while true; do
 	# Log the changed image
 	logger -t WallpaperChanger -p daemon.info "Current wallpaper : $random_wallpaper";
 	# Sleep for 30 minutes
-	sleep 10;
+	sleep 30m;
 done
 # The next line is basically useless.. You know, coding norms...
 exit 0;
