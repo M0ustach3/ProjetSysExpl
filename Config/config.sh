@@ -20,8 +20,8 @@ SHORTOPTS="hiuv";
 LONGOPTS="help,install,uninstall,verbose";
 
 
-ARGS=$(getopt -s bash --options $SHORTOPTS  \
-  --longoptions $LONGOPTS --name $PROGNAME -- "$@" );
+ARGS=$(getopt -s bash --options "$SHORTOPTS"  \
+  --longoptions "$LONGOPTS" --name "$PROGNAME" -- "$@" );
 
 eval set -- "$ARGS";
 
@@ -39,26 +39,23 @@ while true; do
     ;;
     -i|--install)
       (( VERBOSE )) && logThis "info" "Copying script to /opt...";
-      # Copy the config script inside /opt
-      sudo cp ./configProfiles.sh /opt;
-			# If the previous command failed, exit the program
-			if [[ "$?" -ne 0 ]]; then
+			# Copy the script to /opt
+			# If the command fails, exit the program
+			if [[ $(sudo cp ./configProfiles.sh /opt) -ne 0 ]]; then
 				logThis "error" "Error trying to copy configProfiles.sh to /opt" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Copying .desktop file to /etc/xdg/autostart...";
       # Add the .desktop file inside the autostart folder of xdg (to be launched with xfce)
-      sudo cp ./configProfiles.desktop /etc/xdg/autostart/;
 			# If the previous command failed, exit the program
-			if [[ "$?" -ne 0 ]]; then
+			if [[ $(sudo cp ./configProfiles.desktop /etc/xdg/autostart/) -ne 0 ]]; then
 				logThis "error" "Error trying to copy configProfiles.desktop to /etc/xdg/autostart" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Copying backgrounds to /usr/share/xfce4/backdrops/...";
       # Copy the backgrounds to the backdrops folder
-      sudo cp ./backgrounds/* /usr/share/xfce4/backdrops/;
 			# If the previous command failed, exit the program
-			if [[ "$?" -ne 0 ]]; then
+			if [[ $(sudo cp ./backgrounds/* /usr/share/xfce4/backdrops/) -ne 0 ]]; then
 				logThis "error" "Error trying to copy backgrounds to /usr/share/xfce4/backdrops" "ConfigProfiles";
 				exit 1;
 			fi
@@ -72,25 +69,22 @@ while true; do
     -u|--uninstall)
       (( VERBOSE )) && logThis "info" "Removing script from /opt...";
       # Remove the script from opt
-      sudo rm /opt/configProfiles.sh;
 			# If the previous command failed, exit the program
-			if [[ "$?" -ne 0 ]]; then
+			if [[ $(sudo rm /opt/configProfiles.sh) -ne 0 ]]; then
 				logThis "error" "Error trying to remove /opt/configProfiles.sh" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Removing .desktop file from /etc/xdg/autostart...";
       # Add the .desktop file inside the autostart folder of xdg (to be launched with xfce)
-      sudo rm /etc/xdg/autostart/configProfiles.desktop;
 			# If the previous command failed, exit the program
-			if [[ "$?" -ne 0 ]]; then
+			if [[ $(sudo rm /etc/xdg/autostart/configProfiles.desktop) -ne 0 ]]; then
 				logThis "error" "Error trying to remove /etc/xdg/autostart/configProfiles.desktop" "ConfigProfiles";
 				exit 1;
 			fi
       (( VERBOSE )) && logThis "info" "Removing backgrounds from /usr/share/xfce4/backdrops/...";
       # Copy the backgrounds to the backdrops folder
-      cd /usr/share/xfce4/backdrops/ && sudo rm -f pro.jpg train.jpg perso.png;
 			# If the previous command failed, exit the program
-			if [[ "$?" -ne 0 ]]; then
+			if [[ $(cd /usr/share/xfce4/backdrops/ && sudo rm -f pro.jpg train.jpg perso.png) -ne 0 ]]; then
 				logThis "error" "Error trying to remove files from /usr/share/xfce4/backdrops/" "ConfigProfiles";
 				exit 1;
 			fi
