@@ -18,7 +18,8 @@ help(){
 
 function createUnit() {
   # Get the current connected user
-  local me=$(whoami);
+  local me="";
+	me=$(whoami);
   echo "[Unit]
   Description=Service to change wallpaper
   After=display-manager.service
@@ -38,8 +39,8 @@ SHORTOPTS="hiuv";
 LONGOPTS="help,install,uninstall,verbose";
 
 
-ARGS=$(getopt -s bash --options $SHORTOPTS  \
-  --longoptions $LONGOPTS --name $PROGNAME -- "$@" );
+ARGS=$(getopt -s bash --options "$SHORTOPTS"  \
+  --longoptions "$LONGOPTS" --name "$PROGNAME" -- "$@" );
 
 eval set -- "$ARGS";
 

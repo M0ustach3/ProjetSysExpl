@@ -41,16 +41,14 @@ if [ $exitstatus = 0 ]; then
               # If enter or OK was pressed
               if [ $exitstatus = 0 ]; then
                   # Put the password inside the cryptsetup open command
-                  echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition;
                   # If the previous command failed, exit the program
-                  if [[ "$?" -ne 0 ]]; then
+                  if [[ $(echo "$PASSWORD" | sudo cryptsetup luksOpen "$PARTITION" encryptedPartition) -ne 0 ]]; then
                     logThis "error" "Error trying to open encrypted partition" "ConfigProfiles";
                     exit 1;
                   fi
                   # Mount the partition
-                  sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition;
                   # If the previous command failed, exit the program
-                  if [[ "$?" -ne 0 ]]; then
+                  if [[ $(sudo mount /dev/mapper/encryptedPartition /media/encryptedPartition) -ne 0 ]]; then
                     logThis "error" "Error trying to mount partition to /media/encryptedPartition" "ConfigProfiles";
                     exit 1;
                   fi
