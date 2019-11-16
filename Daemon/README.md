@@ -21,7 +21,8 @@ You can also check a short manual by typing :
 | :-------------: |:-------------:|
 | `-h` or `--help`      | Show the help and exit |
 |`-v`  or `--verbose`|Sets verbosity on or off. **HAS TO BE THE FIRST OPTION TO WORK**|
-|`-i` or `--install`|Installs the daemon|
+|`-l` or `--local`|Locally installs the daemon|
+|`-g` or `--global`|Globally installs the daemon|
 |`-u` or `--uninstall`|Uninstalls the daemon|
 
 

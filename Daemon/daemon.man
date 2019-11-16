@@ -2,7 +2,7 @@
 .SH NAME
 Daemon. Daemon used to change the wallpaper every 30 minutes.
 .SH SYNOPSIS
-Usage : ./daemon.sh [-v,--verbose] [-h,--help] (-i,--install | -u,--uninstall)
+Usage : ./daemon.sh [-v,--verbose] [-h,--help] (-l,--local | -g,--global | -u,--uninstall)
 .PP
 .B -h, --help
 Print the help and quit the program.
@@ -11,18 +11,21 @@ Print the help and quit the program.
 Sets the verbose output.
 .B THIS OPTION HAS TO BE PUT FIRST TO WORK
 .PP
-.B -i, --install
-Installs the daemon
+.B -l, --local
+Installs the daemon for the current user
+.PP
+.B -g, --global
+Installs the daemon for the whole system
 .PP
 .B -u, --uninstall
-Uninstalls the daemon
+Uninstalls the daemon (both locally and system-wide)
 .PP
 .SH EXAMPLES
 .B ./daemon.sh --help\t
 Print the help
 .PP
-.B ./daemon.sh --verbose -i\t
-Installs the daemon with verbose output
+.B ./daemon.sh --verbose -l\t
+Locally installs the daemon with verbose output
 .PP
 .B ./daemon.sh -v --uninstall\t
 Uninstalls the daemon with verbose output
@@ -30,12 +33,14 @@ Uninstalls the daemon with verbose output
 .SH SEE ALSO
 .B getopt
 .PP
+.B systemctl
+.PP
 .SH BUGS
 If the -v option is not put in first, the verbose output won't enable.
 .PP
 If you try to call the script with both
-.B --install
-and
+.B --local
+(for example) and
 .B --uninstall
 options, only the first one will be considered.
 .SH AUTHOR
