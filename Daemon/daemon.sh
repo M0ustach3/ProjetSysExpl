@@ -102,6 +102,7 @@ while true; do
       # Exit with code 0
       exit 0;
     ;;
+		# Thanks to Christopher GEST for this idea
 		-l|--local )
 			# Create a temp file
 			tempFile=$(mktemp);
