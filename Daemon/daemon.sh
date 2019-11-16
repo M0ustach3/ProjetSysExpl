@@ -10,7 +10,6 @@ help(){
 	echo "\
 	Usage : ./daemon.sh [OPTION...]
 	-h, --help; Print the help and exit
-	-i, --install; Installs the daemon
 	-l, --local; Installs the daemon in local mode
 	-g, --global; Installs the daemon for all users
   -u, --uninstall; Uninstalls the daemon
@@ -19,22 +18,37 @@ help(){
 }
 
 function createUnit() {
-  # Get the current connected user
-  local me="";
-	me=$(whoami);
-  echo "[Unit]
-  Description=Service to change wallpaper
-  After=display-manager.service
+	if [[ -n "$1" ]]; then
+		# Get the current connected user
+		local me="";
+		me=$(whoami);
+		echo "[Unit]
+		Description=Service to change wallpaper
+		After=display-manager.service
 
-  [Service]
-  Type=simple
-	User=$me
+		[Service]
+		Type=simple
+		User="$me"
 
-  ExecStart=/bin/bash /opt/wallpaperChanger.sh
-  Restart=always
+		ExecStart=/bin/bash /opt/wallpaperChanger.sh
+		Restart=always
 
-  [Install]
-  WantedBy=multi-user.target";
+		[Install]
+		WantedBy=multi-user.target";
+	else
+		echo "[Unit]
+		Description=Service to change wallpaper
+		After=display-manager.service
+
+		[Service]
+		Type=simple
+
+		ExecStart=/bin/bash /opt/wallpaperChanger.sh
+		Restart=always
+
+		[Install]
+		WantedBy=multi-user.target";
+	fi
 }
 
 PROGNAME=${0##*/};
@@ -63,7 +77,7 @@ while true; do
 			# Create a temp file
 			$tempFile=$(mktemp);
       # Echo all the service into the file
-      createUnit > "$tempFile";
+      createUnit "global" > "$tempFile";
       # Copy the script into /opt (the best place according to the FHS)
       (( VERBOSE )) && logThis "info" "Copying files to /opt...";
       sudo cp ./wallpaperChanger.sh /opt/;
@@ -93,18 +107,17 @@ while true; do
 			tempFile=$(mktemp);
 			# Echo all the service into the file
 			createUnit > "$tempFile";
-			# Echo all the service into the file, specifying the user who will run the service
-			createUnit > /tmp/daemonWallpaper.service;
 			# If the directory doesn't exist
 			if [[ ! -d ~/.local/share/systemd/user ]]; then
+				(( VERBOSE )) && logThis "info" "Creating ~/.local/share/systemd/user";
 					mkdir -p ~/.local/share/systemd/user
 			fi
 			# Copy the script into /opt (the best place according to the FHS)
 			(( VERBOSE )) && logThis "info" "Copying files to /opt...";
 			sudo cp ./wallpaperChanger.sh /opt/;
 			# Copy the service into the systemd folder
-			(( VERBOSE )) && logThis "info" "Copying files to /etc/systemd/system...";
-			sudo cp "$tempFile" ~/.local/share/systemd/user;
+			(( VERBOSE )) && logThis "info" "Copying files to ~/.local/share/systemd/user/...";
+ 			cp "$tempFile" ~/.local/share/systemd/user/daemonWallpaper.service;
 			# Reload the daemons
 			(( VERBOSE )) && logThis "info" "Reloading daemons...";
 			systemctl --user daemon-reload;
@@ -124,9 +137,11 @@ while true; do
 			exit 0;
 		;;
     -u|--uninstall )
-			# Remove files from /opt
-			(( VERBOSE )) && logThis "info" "Removing files from /opt...";
-			sudo rm /opt/wallpaperChanger.sh;
+			if [[ -f /opt/wallpaperChanger.sh ]]; then
+				# Remove files from /opt
+				(( VERBOSE )) && logThis "info" "Removing files from /opt...";
+				sudo rm /opt/wallpaperChanger.sh;
+			fi
 			if [[ -f /etc/systemd/system/daemonWallpaper.service ]]; then
 				# Stop the previous daemon (if existing)
 				(( VERBOSE )) && logThis "info" "Trying to stop daemon...";
@@ -146,7 +161,7 @@ while true; do
 				(( VERBOSE )) && logThis "info" "Trying to stop daemon...";
 				systemctl --user stop daemonWallpaper.service;
 				# Remove .service file
-				(( VERBOSE )) && logThis "info" "Removing service from /etc/systemd/system...";
+				(( VERBOSE )) && logThis "info" "Removing service from ~/.local/share/systemd/user...";
 				rm ~/.local/share/systemd/user/daemonWallpaper.service;
 				# Reload the daemons
 				(( VERBOSE )) && logThis "info" "Reloading daemons...";
