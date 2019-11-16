@@ -1,6 +1,6 @@
 # Daemon
 
-daemon is a program meant to change the wallpaper every 30 mins.
+daemon is a program meant to change the wallpaper every 30 mins. This does NOT YET activate itself at startup.
 
 ## Installation
 
